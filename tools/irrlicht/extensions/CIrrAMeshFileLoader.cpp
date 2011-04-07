@@ -358,32 +358,6 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromName(const core::stri
     return 0;
 }
 
-void CIrrAMeshFileLoader::calcChildMatrices(scene::ISkinnedMesh::SJoint* parent)
-{
-    // calculate local & global matrices
-	core::matrix4 positionMatrix;
-	core::matrix4 scaleMatrix;
-	core::matrix4 rotationMatrix;
-
-    if(!parent->Children.size())
-        return;
-
-    for (u32 i=0; i < parent->Children.size(); ++i)
-    {
-        ISkinnedMesh::SJoint *joint = parent->Children[i];
-
-        positionMatrix.setTranslation( joint->Animatedposition );
-        scaleMatrix.setScale( joint->Animatedscale );
-        rotationMatrix = joint->Animatedrotation.getMatrix();
-
-        joint->LocalMatrix = positionMatrix * rotationMatrix * scaleMatrix;
-        joint->GlobalMatrix = parent->GlobalMatrix * joint->LocalMatrix;
-
-        if(joint->Children.size())
-            calcChildMatrices(joint);
-    }
-}
-
 void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stringc skelLink, 
                                         const core::stringc animationName, f32 animationLength)
 {
@@ -591,22 +565,29 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
 
                             attr->read(reader, false, nodeName);
 
-                            // use "animated" joint vars as temporary place holder to later
-                            // calculate the local & global matrices.
-                            if(attr->existsAttribute("Position"))
-                            {
-                                joint->Animatedposition = attr->getAttributeAsVector3d("Position");
-                            }
+                            joint->LocalMatrix.makeIdentity();
                             if(attr->existsAttribute("Rotation"))
                             {
                                 core::vector3df rot = attr->getAttributeAsVector3d("Rotation");
-                                joint->Animatedrotation = core::quaternion(rot);
+                                joint->LocalMatrix = core::quaternion(rot).getMatrix();
                             }
+
                             if(attr->existsAttribute("Scale"))
                             {
-                                joint->Animatedscale = attr->getAttributeAsVector3d("Scale");
+                                core::vector3df scale = attr->getAttributeAsVector3d("Scale");
+                                if(scale != core::vector3df(1,1,1))
+                                {
+                                    core::matrix4 scaleMatrix;
+                                    scaleMatrix.setScale( scale );
+                                    joint->LocalMatrix *= scaleMatrix;
+                                }
                             }
-                            else joint->Animatedscale = core::vector3df(1.f, 1.f, 1.f);
+
+                            if(attr->existsAttribute("Position"))
+                            {
+                                core::vector3df position = attr->getAttributeAsVector3d("Position");
+                                joint->LocalMatrix.setTranslation(position);
+                            }
                             ++jidx;
                         }
                         else
@@ -682,35 +663,6 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
         }
     }
 
-    // calculate root joints
-    core::array<ISkinnedMesh::SJoint*> &allJoints = AnimatedMesh->getAllJoints();
-    core::array<ISkinnedMesh::SJoint*> rootJoints;
-    for (u32 i=0; i < allJoints.size(); ++i)
-    {
-        ISkinnedMesh::SJoint *joint = allJoints[i];
-        if(!isChildJoint(joint, allJoints))
-            rootJoints.push_back(joint);
-    }
-
-    // calculate local & global matrices
-	core::matrix4 positionMatrix;
-	core::matrix4 scaleMatrix;
-	core::matrix4 rotationMatrix;
-    for (u32 i=0; i < rootJoints.size(); ++i)
-    {
-        ISkinnedMesh::SJoint *joint = rootJoints[i];
-        if(joint->Children.size())
-        {
-	        positionMatrix.setTranslation( joint->Animatedposition );
-	        scaleMatrix.setScale( joint->Animatedscale );
-            rotationMatrix = joint->Animatedrotation.getMatrix();
-
-	        joint->LocalMatrix = positionMatrix * rotationMatrix * scaleMatrix;
-            joint->GlobalMatrix = joint->LocalMatrix;
-
-            calcChildMatrices(joint);
-        }
-    }
 }
 
 
