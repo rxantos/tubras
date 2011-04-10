@@ -14,8 +14,8 @@ namespace Tubras
     class TGUIConsole : public TGUIWindow
     {
     private:
-        IGUIListBox*        m_listBox;
-        TGUICmdEdit*        m_editBox;
+        IGUIListBox*        m_display;
+        TGUICmdEdit*        m_cmdEdit;
 
     public:
         TGUIConsole(IGUIEnvironment* environment, IGUIElement* parent,

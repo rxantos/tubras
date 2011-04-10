@@ -1150,7 +1150,13 @@ namespace Tubras
         if(!m_guiConsole)
             return 0;
 
-        m_guiConsole->setVisible(!m_guiConsole->isVisible());
+        bool visible = !m_guiConsole->isVisible();
+        m_guiConsole->setVisible(visible);
+        if(visible)
+            setInputMode(imGUI);
+        else if(!m_guiMainMenu->getVisible())
+            setInputMode(imApp);
+
         return 1;
     }
 
