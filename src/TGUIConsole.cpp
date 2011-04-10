@@ -14,18 +14,18 @@ namespace Tubras
         IGUIElement* parent, s32 id, core::rect<s32> rectangle, bool modal, 
         bool centered,  bool draggable) : TGUIWindow(environment, parent, id, 
         rectangle, modal, centered, draggable),
-        m_listBox(0),
-        m_editBox(0)
+        m_display(0),
+        m_cmdEdit(0)
     {
         TRecti rect(16, 30, rectangle.getWidth()-20, rectangle.getHeight()-52);
         TRecti erect(20, rectangle.getHeight()-50, rectangle.getWidth()-20, rectangle.getHeight()-25);
 
-        m_listBox = environment->addListBox(rect, this);
-        m_listBox->setAutoScrollEnabled(true);
-        m_listBox->setTabStop(false);
+        m_display = environment->addListBox(rect, this);
+        m_display->setAutoScrollEnabled(true);
+        m_display->setTabStop(false);
 
-        m_editBox = new TGUICmdEdit(L"", true, environment, this, -1, erect);
-        m_editBox->setOverrideColor(SColor(0xFFFFFFFF));
+        m_cmdEdit = new TGUICmdEdit(L"", true, environment, this, -1, erect);
+        m_cmdEdit->setOverrideColor(SColor(0xFFFFFFFF));
         addText("Console v0.1 - Enter \"help\" for a list of available commands.");
 
         setVisible(false);
@@ -36,8 +36,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUIConsole::~TGUIConsole()
     {
-        if(m_editBox)
-            m_editBox->drop();
+        if(m_cmdEdit)
+            m_cmdEdit->drop();
     }
 
     //-----------------------------------------------------------------------
@@ -47,7 +47,7 @@ namespace Tubras
     {
         TGUIWindow::setVisible(visible);   
         if(visible)
-            getApplication()->getGUIManager()->setFocus(m_editBox);
+            getApplication()->getGUIManager()->setFocus(m_cmdEdit);
     }
 
     //-----------------------------------------------------------------------
@@ -65,9 +65,28 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TGUIConsole::OnEvent(const SEvent& event)
     {        
-        bool result = TGUIWindow::OnEvent(event);
+        if(TGUIWindow::OnEvent(event))
+            return true;
 
-        return result;
+
+        if(event.EventType == EET_KEY_INPUT_EVENT)
+        {
+            switch(event.KeyInput.Key)
+            {
+                case irr::KEY_UP:    
+                    if(event.KeyInput.PressedDown)
+                        m_cmdEdit->showHistory(-1);
+                    return true;
+                    break;
+                case irr::KEY_DOWN:
+                    if(event.KeyInput.PressedDown)
+                        m_cmdEdit->showHistory(1);
+                    return true;
+                    break;
+            };
+        }
+
+        return false;
     }
 
     //-----------------------------------------------------------------------
@@ -75,7 +94,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUIConsole::clear()
     {
-        m_listBox->clear();
+        m_display->clear();
     }
 
     //-----------------------------------------------------------------------
@@ -83,9 +102,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     s32 TGUIConsole::addText(core::stringw text)
     {
-        s32 result = m_listBox->addItem(text.c_str());
-        m_listBox->setItemOverrideColor(m_listBox->getItemCount()-1, SColor(0xFFFFFFFF));
-        m_listBox->setSelected(m_listBox->getItemCount()-1);
+        s32 result = m_display->addItem(text.c_str());
+        m_display->setItemOverrideColor(m_display->getItemCount()-1, SColor(0xFFFFFFFF));
+        m_display->setSelected(m_display->getItemCount()-1);
         return result;
     }
 

@@ -303,11 +303,15 @@ void TWalktest::buildNodeLists(ISceneNode* sceneNode)
     }
     else if(type==ESNT_LIGHT)
     {
+        stringc temp;
         ILightSceneNode* node = (ILightSceneNode*) sceneNode;
         
         SLight& ldata = node->getLightData();
 
         IBillboardSceneNode* bnode = getSceneManager()->addBillboardSceneNode(node->getParent());
+        temp = "LightDebug_";
+        temp += node->getName();
+        bnode->setName(temp);
         bnode->setColor(ldata.DiffuseColor.toSColor());
         bnode->setSize(core::dimension2d<f32>(1, 1));
         bnode->setPosition(node->getPosition());

@@ -24,6 +24,7 @@ namespace Tubras
         virtual bool OnEvent(const SEvent& event);
 
         void setVisible(bool visible);
+        bool getVisible() {return m_mainMenu->isVisible();}
 
         void clear();
     };

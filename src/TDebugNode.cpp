@@ -15,7 +15,10 @@ namespace Tubras {
         m_vmax(1000),             // start with 100 vertices = 50 lines
         m_indices(0),
         m_icount(0)
-    {
+   {
+        setDebugName("TDebugNode");
+        setType(MAKE_IRR_ID('t','d','b','g'));
+        setID(1001);
         m_material.Wireframe = false;
         m_material.Lighting = false;
         m_material.DiffuseColor = TColor::White;

@@ -68,9 +68,9 @@ void nodeCount(ISceneNode* node, u32& nodes, u32& cameras, u32& lights)
 //-----------------------------------------------------------------------
 //                        g e t N o d e L i s t
 //-----------------------------------------------------------------------
-void getNodeList(ISceneNode* node, array<Tubras::TString>& l)
+void getNodeList(ISceneNode* node, array<ISceneNode*>& l)
 {
-    l.push_back(node->getName());
+    l.push_back(node);    
 
     list<ISceneNode*> children = node->getChildren();
     if(children.size())
@@ -105,7 +105,8 @@ void writeNodeData(ISceneNode* node, TGUIConsole* g, bool summary=false)
 
     if(summary)
     {
-        sprintf(buf, "  name: %s, type: %s, id: %d", node->getName(), sntype.c_str(), node->getID());
+        sprintf(buf, "  name: %s, type: %s, id: %d, dbg: %s", node->getName(),
+            sntype.c_str(), node->getID(), node->getDebugName());
         g->addText(buf);
         return;
     }
@@ -113,8 +114,9 @@ void writeNodeData(ISceneNode* node, TGUIConsole* g, bool summary=false)
     vector3df apos = node->getAbsolutePosition();
     vector3df pos = node->getPosition();
 
-    sprintf(buf, "  type: %s, id: %d, parent: %s, apos: (%.2f, %.2f, %.2f), "
+    sprintf(buf, "  type: %s, id: %d, parent: %s, dbg: %s, apos: (%.2f, %.2f, %.2f), "
         "pos: (%.2f, %.2f, %.2f)", sntype.c_str(), node->getID(), psnname.c_str(),
+        node->getDebugName(),
         apos.X, apos.Y, apos.Z,
         pos.X, pos.Y, pos.Z);
     g->addText(buf);
@@ -146,7 +148,7 @@ void writeNodeData(ISceneNode* node, TGUIConsole* g, bool summary=false)
 //-----------------------------------------------------------------------
 int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
 {
-    array<Tubras::TString> list;
+    array<ISceneNode*> list;
     c8 buf[128];
 
     ISceneManager* sm = w->getRenderer()->getSceneManager();
@@ -163,7 +165,7 @@ int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
         getNodeList(sm->getRootSceneNode(), list);
         for(u32 i=0; i < list.size(); i++)
         {
-            ISceneNode* sn = sm->getSceneNodeFromName(list[i].c_str());
+            ISceneNode* sn = list[i];
             if(sn)
             {
                 writeNodeData(sn, g, true);
@@ -178,9 +180,9 @@ int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
         bool found = false;
         for(u32 i=0; i < list.size(); i++)
         {
-            if(list[i] == p)
+            if(p == list[i]->getName())
             {
-                ISceneNode* sn = sm->getSceneNodeFromName(p.c_str());
+                ISceneNode* sn = list[i];
                 if(sn)
                 {
                     found = true;

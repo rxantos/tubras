@@ -14,7 +14,7 @@ namespace Tubras {
         m_targetAndRotationAreBound(0)
     {
         // set default view
-
+        setDebugName("TCameraNode");
         m_upVector.set(0.0f, 1.0f, 0.0f);
         m_target.set(0,0,100);
 

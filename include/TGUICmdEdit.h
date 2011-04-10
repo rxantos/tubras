@@ -10,6 +10,9 @@ namespace Tubras
 {
     class TGUICmdEdit : public gui::CGUIEditBox
     {
+    private:
+        core::array<stringw>    m_history;
+        s32                     m_historyIdx;
     protected:
         void parseEvent(core::stringw cmd, TEvent& event);
 
@@ -24,6 +27,7 @@ namespace Tubras
 
         //! called if an event happened.
        virtual bool OnEvent(const SEvent& event);
+       void showHistory(const s32 direction);
 
     };
 

@@ -14,7 +14,7 @@ namespace Tubras
     TGUICmdEdit::TGUICmdEdit(const wchar_t* text, bool border, 
         IGUIEnvironment* environment, IGUIElement* parent, s32 id, 
         const core::rect<s32>& rectangle) : CGUIEditBox(text, 
-        border, environment, parent, id, rectangle)
+        border, environment, parent, id, rectangle)        
     {
     }
 
@@ -57,6 +57,23 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         s h o w H i s t o r y
+    //-----------------------------------------------------------------------
+    void TGUICmdEdit::showHistory(s32 direction)
+    {
+        if(!m_history.size())
+            return;
+
+        setText(m_history[m_historyIdx].c_str());
+
+        m_historyIdx += direction;
+        if(m_historyIdx < 0)
+            m_historyIdx = 0;
+        if(m_historyIdx >= m_history.size())
+            m_historyIdx = m_history.size()-1;
+    }
+
+    //-----------------------------------------------------------------------
     //                           O n E v e n t
     //-----------------------------------------------------------------------
     bool TGUICmdEdit::OnEvent(const SEvent& event)
@@ -70,14 +87,16 @@ namespace Tubras
                 core::stringw text = this->getText();
                 if(text.size())
                 {
+                    m_history.push_back(text);
+                    m_historyIdx = m_history.size()-1;
+
                     parseEvent(text, tevent);
                     getApplication()->getEventManager()->send(&tevent);
-                    this->setText(L"");
+                    setText(L"");
                     return true;
                 }
             }
         }
-
 
         bool result = CGUIEditBox::OnEvent(event);
 
