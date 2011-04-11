@@ -368,6 +368,14 @@ void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stri
     f32 TotalFrames = animationLength * AnimatedMesh->getAnimationSpeed();
     f32 FrameBase = (f32) FrameCount;
 
+    io::IAttributes* attr = FileSystem->createEmptyAttributes();
+
+    attr->addString("animationName", animationName.c_str());
+    attr->addInt("startFrame", FrameBase);
+    attr->addInt("endFrame", FrameBase + TotalFrames);
+
+    AnimatedMesh->addNamedAnimationData(animationName.c_str(), attr);    
+
 	while(reader->read())
 	{
 		if (reader->getNodeType() == io::EXN_ELEMENT)

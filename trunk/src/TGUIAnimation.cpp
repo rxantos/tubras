@@ -184,6 +184,53 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //               u p d a t e S e l e c t e d A n i m a t i o n
+    //-----------------------------------------------------------------------
+    void TGUIAnimation::updateSelectedAnimation()
+    {
+        const wchar_t* wname = m_cbAnimations->getText();
+        stringc name = wname;
+
+        IAnimatedMesh* mesh = m_selected->getMesh();
+
+        s32 idx = mesh->getAnimationIndex(name.c_str());
+        if(idx < 0)
+            return;
+
+        io::IAttributes* attr;
+
+        mesh->getAnimation(idx, &attr);
+
+        s32 start = attr->getAttributeAsInt("startFrame");
+        s32 end = attr->getAttributeAsInt("endFrame");
+
+        char     buf[64];
+        stringw  wbuf;
+
+        sprintf(buf, "%d", start);
+        wbuf = buf;
+        m_eStartFrame->setText(wbuf.c_str());
+
+        sprintf(buf, "%d", end);
+        wbuf = buf;
+        m_eEndFrame->setText(wbuf.c_str());
+
+        sprintf(buf, "%d", (int) start);
+        wbuf = buf;
+        m_eCurrentFrame->setText(wbuf.c_str());
+
+        m_selected->setAnimation(name.c_str());
+        m_selected->setCurrentFrame(start);
+
+        m_sbFrame->setMin(start);
+        m_sbFrame->setMax(end);
+        m_sbFrame->setPos(start);
+        m_sbFrame->setSmallStep(1);
+        m_sbFrame->setLargeStep(5);
+
+    }
+
+    //-----------------------------------------------------------------------
     //                  u p d a t e S e l e c t e d N o d e
     //-----------------------------------------------------------------------
     void TGUIAnimation::updateSelectedNode()
@@ -225,6 +272,25 @@ namespace Tubras
         m_sbFrame->setPos(s32(cur));
         m_sbFrame->setSmallStep(1);
         m_sbFrame->setLargeStep(5);
+
+        // enumerate named animations
+        IAnimatedMesh* mesh = node->getMesh();
+        u32 count = mesh->getAnimationCount();
+        io::IAttributes* attr=0;
+        m_cbAnimations->clear();
+        for(u32 i=0; i < count; i++)
+        {
+            if(mesh->getAnimation((s32)i, &attr))
+            {
+                stringw name = attr->getAttributeAsStringW("animationName");
+                m_cbAnimations->addItem(name.c_str());
+            }
+        }
+        if(m_cbAnimations->getItemCount())
+        {
+            m_cbAnimations->setSelected(0);
+            updateSelectedAnimation();
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -249,7 +315,7 @@ namespace Tubras
             case GID_ANIMATIONS:
                 if(event.GUIEvent.EventType == EGET_COMBO_BOX_CHANGED)
                 {
-                    updateSelectedNode();
+                    updateSelectedAnimation();
                     result = true;
                 }
                 break;

@@ -30,6 +30,7 @@ namespace Tubras
         void layout(u32 idx, IGUIStaticText* label, IGUIElement* control, f32 cwidth=1.f);
         void buildNodeList(ISceneManager* manager, ISceneNode* node=0);
         void updateSelectedNode();
+        void updateSelectedAnimation();
 
     public:
         TGUIAnimation(stringw title="Animation", IGUIElement* parent=0, 
