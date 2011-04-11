@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#define GID_ANIMATIONS      1000
+#define GID_NODES           1000
+#define GID_ANIMATIONS      1001
+#define GID_FRAMES          1002
 
 namespace Tubras
 {
@@ -14,9 +16,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUIAnimation::TGUIAnimation(stringw title, IGUIElement* parent, 
         IGUIEnvironment* environment, s32 id) : TGUIWindow(environment ? environment : getApplication()->getGUIManager(), 
-        parent, id,  core::rect<s32>(0, 0, 0, 0), false, false, true)
+        parent, id,  core::rect<s32>(0, 0, 0, 0), false, false, true),
+        m_selected(0)
     {
-        u32 width=225, height=250;
+        u32 width=225, height=300;
         f32 middle = .35f;
 
         m_middle = middle;
@@ -40,7 +43,7 @@ namespace Tubras
         IGUIStaticText* label;
 
         label = env->addStaticText(L"Node", rect, false, true, this);
-        m_cbNodes = env->addComboBox(rect, this);
+        m_cbNodes = env->addComboBox(rect, this, GID_NODES);
         layout(idx, label, m_cbNodes);
         ++idx;
         
@@ -52,16 +55,21 @@ namespace Tubras
 
         label = env->addStaticText(L"Start", rect, false, true, this);
         m_eStartFrame = env->addEditBox(L"1", rect, true, this);
+        m_eStartFrame->setEnabled(false);
+        m_eStartFrame->setOverrideColor(SColor(0xFFFFFFFF));
+
         layout(idx, label, m_eStartFrame, .5f);
         ++idx;
 
         label = env->addStaticText(L"End", rect, false, true, this);
         m_eEndFrame = env->addEditBox(L"", rect, true, this);
+        m_eEndFrame->setEnabled(false);
+        m_eEndFrame->setOverrideColor(SColor(0xFFFFFFFF));
         layout(idx, label, m_eEndFrame, .5f);
         ++idx;
 
         label = env->addStaticText(L"Current", rect, false, true, this);
-        m_eCurrentFrame = env->addEditBox(L"1", rect, true, this);
+        m_eCurrentFrame = env->addEditBox(L"0", rect, true, this);
         layout(idx, label, m_eCurrentFrame, .5f);
         ++idx;
 
@@ -70,10 +78,17 @@ namespace Tubras
         layout(idx, label, m_eSpeed, .5f);
         ++idx;
 
+        label = env->addStaticText(L"Loop", rect, false, true, this);
+        m_cbLoop = env->addCheckBox(false, rect, this);
+        layout(idx, label, m_cbLoop, .5f);
+        ++idx;
+        
         label = env->addStaticText(L"Frame", rect, false, true, this);
-        m_sbFrame = env->addScrollBar(true, rect, this);
+        m_sbFrame = env->addScrollBar(true, rect, this, GID_FRAMES);
         layout(idx, label, m_sbFrame);
         ++idx;
+
+
         
     }
 
@@ -132,7 +147,7 @@ namespace Tubras
         ESCENE_NODE_TYPE type = node->getType();
         if(type == ESNT_ANIMATED_MESH)
         {
-            m_animatedNodes.push_back(node);
+            m_animatedNodes.push_back(static_cast<scene::IAnimatedMeshSceneNode*>(node));
             stringw name = node->getName();
             m_cbNodes->addItem(name.c_str(), m_animatedNodes.size()-1);
         }
@@ -162,7 +177,10 @@ namespace Tubras
 
         buildNodeList(manager, manager->getRootSceneNode());
         if(m_animatedNodes.size())
+        {
             m_cbNodes->setSelected(0);
+            updateSelectedNode();
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -170,6 +188,43 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUIAnimation::updateSelectedNode()
     {
+        s32 idx = m_cbNodes->getSelected();
+        if(idx < 0)
+            return;
+
+        IAnimatedMeshSceneNode* node = m_animatedNodes[idx];
+        m_selected = node;
+
+        s32 start = node->getStartFrame();
+        s32 end = node->getEndFrame();
+
+        f32 cur = node->getFrameNr();
+        f32 speed = node->getAnimationSpeed();
+        
+        char     buf[64];
+        stringw  wbuf;
+
+        sprintf(buf, "%d", start);
+        wbuf = buf;
+        m_eStartFrame->setText(wbuf.c_str());
+
+        sprintf(buf, "%d", end);
+        wbuf = buf;
+        m_eEndFrame->setText(wbuf.c_str());
+
+        sprintf(buf, "%d", (int) cur);
+        wbuf = buf;
+        m_eCurrentFrame->setText(wbuf.c_str());
+
+        sprintf(buf, "%d", (int) speed);
+        wbuf = buf;
+        m_eSpeed->setText(wbuf.c_str());
+
+        m_sbFrame->setMin(start);
+        m_sbFrame->setMax(end);
+        m_sbFrame->setPos(s32(cur));
+        m_sbFrame->setSmallStep(1);
+        m_sbFrame->setLargeStep(5);
     }
 
     //-----------------------------------------------------------------------
@@ -184,10 +239,32 @@ namespace Tubras
             s32 id = event.GUIEvent.Caller->getID();
             switch(id)
             {
+            case GID_NODES:
+                if(event.GUIEvent.EventType == EGET_COMBO_BOX_CHANGED)
+                {
+                    updateSelectedNode();
+                    result = true;
+                }
+                break;
             case GID_ANIMATIONS:
                 if(event.GUIEvent.EventType == EGET_COMBO_BOX_CHANGED)
                 {
                     updateSelectedNode();
+                    result = true;
+                }
+                break;
+
+            case GID_FRAMES:
+                if(event.GUIEvent.EventType == EGET_SCROLL_BAR_CHANGED)
+                {
+                    if(m_selected)
+                    {
+                        m_selected->setCurrentFrame(m_sbFrame->getPos());
+                        char buf[64];
+                        sprintf(buf, "%d", (int) m_selected->getFrameNr());
+                        stringw wbuf = buf;
+                        m_eCurrentFrame->setText(wbuf.c_str());
+                    }
                     result = true;
                 }
                 break;
