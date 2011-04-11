@@ -14,14 +14,15 @@ namespace Tubras
     class TGUIAnimation : public TGUIWindow
     {
     protected:
-        TArray<ISceneNode*>     m_animatedNodes;
-
+        TArray<IAnimatedMeshSceneNode*>     m_animatedNodes;
+        IAnimatedMeshSceneNode* m_selected;
         IGUIComboBox*           m_cbNodes;
         IGUIComboBox*           m_cbAnimations;
         IGUIEditBox*            m_eStartFrame;
         IGUIEditBox*            m_eEndFrame;
         IGUIEditBox*            m_eCurrentFrame;
         IGUIEditBox*            m_eSpeed;
+        IGUICheckBox*           m_cbLoop;
         IGUIScrollBar*          m_sbFrame;
 
         f32                     m_middle;

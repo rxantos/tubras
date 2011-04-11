@@ -3665,9 +3665,11 @@ class iMeshBuffer:
         action = bpy.data.actions[actionName]
 
         fps = self.exporter.gBScene.render.fps_base * self.exporter.gBScene.render.fps
-        aframes = action.frame_range[1] - action.frame_range[0] + 1
+        aframes = action.frame_range[1] - action.frame_range[0]
+        
+        print('frame_range: ',action.frame_range)
 
-        slength = '{:.6f}'.format(aframes / fps)
+        slength = _formatFloats(((aframes / fps),))
         file.write('    <animation name="{}" length="{}">\n'.format(actionName,
             slength))
 
@@ -3707,7 +3709,7 @@ class iMeshBuffer:
             frameData = collections.OrderedDict(sorted(boneData[boneName].items(), key=lambda t: t[0]))
             for frame in frameData:
                 keyData = frameData[frame]
-                skeytime = '{:.6f}'.format(frame / fps)
+                skeytime = '{:.6f}'.format((frame-1) / fps)
                 file.write('{}<keyframe time="{}" interpolation="{}">\n'.format(i2, skeytime, 'LINEAR'))
 
                 dat = keyData['location']
