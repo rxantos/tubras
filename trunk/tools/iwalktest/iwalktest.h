@@ -63,6 +63,13 @@ typedef struct
     f32                 stepHeight;
 } CamCharInfo, *PCamCharInfo;
 
+class TAboutDlg : public TGUIDialog
+{
+public:
+    TAboutDlg(IGUIEnvironment* environment, IGUIElement* parent);
+    void addText(IGUIEnvironment* e, u32 idx, const irr::c8*, u32 color=0xFFFFFFFF);
+};
+
 class TWalktest : public TApplication
 {
 protected:
@@ -79,6 +86,7 @@ protected:
     io::IAttributes*                m_sceneAttributes;
     u32                             m_dbgSensorIndex;
     TPhysicsConstraintList          m_constraints;
+    TAboutDlg*                      m_aboutDlg;
 public:
     TWalktest();
     ~TWalktest();
@@ -96,6 +104,7 @@ public:
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int handleSensor(const TEvent* event);
+    int handleMenu(const TEvent* event);
     int initConfig();
     int onDeviceCreated();
     int onConsoleCommand(const TEvent* event);

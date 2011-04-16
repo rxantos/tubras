@@ -23,6 +23,8 @@ namespace Tubras
         //! called if an event happened.
         virtual bool OnEvent(const SEvent& event);
 
+        gui::IGUIContextMenu* getContext() {return m_mainMenu;}
+
         void setVisible(bool visible);
         bool getVisible() {return m_mainMenu->isVisible();}
 

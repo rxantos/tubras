@@ -114,6 +114,7 @@ namespace Tubras
         TTaskManager* getTaskManager() {return m_taskManager;}
         TGUIConsole* getGUIConsole() {return m_guiConsole;}
         TGUIAnimation* getGUIAnimation() {return m_guiAnimation;}
+        TGUIMainMenu* getGUIMainMenu() {return m_guiMainMenu;}
 
         void initDebugGUI();
 
