@@ -5,15 +5,24 @@
 //-----------------------------------------------------------------------------
 #include "iwalktest.h"
 
+enum
+{
+    GUID_MAIN_MENU_START  = 0x10000,
+    GUID_OPEN_SCENE,
+
+    GUID_HELP_ABOUT,
+    GUID_QUIT
+};
+
 //-----------------------------------------------------------------------
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
 TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false),
-    m_lightMapsVisible(true),
-    m_useIrrlichtCollision(false),
-    m_havePayload(false),
-    m_physicsEnabled(false),
-    m_sceneAttributes(0)
+m_lightMapsVisible(true),
+m_useIrrlichtCollision(false),
+m_havePayload(false),
+m_physicsEnabled(false),
+m_sceneAttributes(0)
 {
 }
 
@@ -211,7 +220,7 @@ int TWalktest::handleSensor(const TEvent* event)
     int enter = ((TEvent*)event)->getParameter(1)->getIntValue();
 
     TColor color = TColor::White;
-    
+
     Tubras::TString tdata = "None";
 
     if(enter)
@@ -261,6 +270,26 @@ int TWalktest::toggleWire(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                       h a n d l e M e n u
+//-----------------------------------------------------------------------
+int TWalktest::handleMenu(const TEvent* event)
+{
+    s32 id = ((TEvent*)event)->getParameter(0)->getIntValue();
+
+    switch(id)
+    {
+    case GUID_QUIT:
+        TApplication::stopRunning();
+        return 1;
+    case GUID_HELP_ABOUT:
+        new TAboutDlg(this->getGUIManager(), m_guiScreen);
+        return 1;
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
 //                             q u i t
 //-----------------------------------------------------------------------
 int TWalktest::quit(const TEvent* event)
@@ -285,8 +314,8 @@ void TWalktest::buildNodeLists(ISceneNode* sceneNode)
         {
             SMaterial& mat = node->getMaterial(0);
             if((mat.MaterialType >= EMT_LIGHTMAP) && 
-               (mat.MaterialType <= EMT_LIGHTMAP_LIGHTING_M4) ||
-               (mat.MaterialType == EMT_LM_ALPHA))
+                (mat.MaterialType <= EMT_LIGHTMAP_LIGHTING_M4) ||
+                (mat.MaterialType == EMT_LM_ALPHA))
             {
                 PLMInfo p = new LMInfo;
                 p->node = node;
@@ -305,7 +334,7 @@ void TWalktest::buildNodeLists(ISceneNode* sceneNode)
     {
         stringc temp;
         ILightSceneNode* node = (ILightSceneNode*) sceneNode;
-        
+
         SLight& ldata = node->getLightData();
 
         IBillboardSceneNode* bnode = getSceneManager()->addBillboardSceneNode(node->getParent());
@@ -437,20 +466,20 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
                 pc->Type = ctConeTwist;
             else if(temp.equals_ignore_case("generic_6_dof"))
                 pc->Type = ct6DOF;
-            
+
             varname = prefix + "Target";
             pc->Target = userData->getAttributeAsString(varname.c_str());
-            
+
             varname = prefix + "Child";
             pc->Child = userData->getAttributeAsString(varname.c_str());
-            
+
             varname = prefix + "Pivot";
             vector3df vtemp = userData->getAttributeAsVector3d(varname.c_str());
             pc->Pivot.setZero();
             pc->Pivot.setX(vtemp.X);
             pc->Pivot.setY(vtemp.Y);
             pc->Pivot.setZ(vtemp.Z);
-            
+
             varname = prefix + "Axis";
             vtemp = userData->getAttributeAsVector3d(varname.c_str());
             pc->Axis.setZero();
@@ -821,7 +850,7 @@ void usage()
     iPrintf("         -p <pack file>     Packed archive.\n");
     iPrintf("         -c <config file>   Config file override.\n");
     iPrintf("         -o <config option> Config option override.\n");
-    
+
 #ifdef TUBRAS_PLATFORM_WINDOWS
     DWORD dwEvents;
     INPUT_RECORD ir[2];
@@ -1079,6 +1108,32 @@ int TWalktest::initialize()
 
     addHelpText("Esc -","Quit");
 
+    //
+    // setup main menu
+    //
+
+    gui::IGUIContextMenu* mainMenu = getGUIMainMenu()->getContext();
+
+    mainMenu->addItem(L"File", -1, true, true);
+    mainMenu->addItem(L"View", -1, true, true);
+    mainMenu->addItem(L"Camera", -1, true, true);
+    mainMenu->addItem(L"Help", -1, true, true);
+
+
+    gui::IGUIContextMenu* submenu;
+
+    // file
+    submenu = mainMenu->getSubMenu(0);
+    submenu->addItem(L"Open Scene...", GUID_OPEN_SCENE);
+    submenu->addSeparator();
+    submenu->addItem(L"Quit", GUID_QUIT);
+
+    // help
+    submenu = mainMenu->getSubMenu(3);
+    submenu->addItem(L"About", GUID_HELP_ABOUT);
+
+    acceptEvent("gui.menu.clicked", EVENT_DELEGATE(TWalktest::handleMenu));
+
     return 0;
 }
 
@@ -1092,7 +1147,7 @@ int main(int argc, const char **argv)
 {
     TWalktest app;
 #ifdef _DEBUG
-	//m_breakOnAlloc(168157);
+    //m_breakOnAlloc(168157);
 #endif
     app.setArgs(argc,argv);
 

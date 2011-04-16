@@ -191,6 +191,9 @@ namespace Tubras
         const wchar_t* wname = m_cbAnimations->getText();
         stringc name = wname;
 
+        if(!m_selected)
+            return;
+
         IAnimatedMesh* mesh = m_selected->getMesh();
 
         s32 idx = mesh->getAnimationIndex(name.c_str());

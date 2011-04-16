@@ -69,7 +69,6 @@ namespace Tubras
         }
 
         updateClientRect();
-
     }
 
     //-----------------------------------------------------------------------
@@ -84,16 +83,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUIDialog::closeDialog()
     {
-        // send close event to parent
-        SEvent e;
-        e.EventType = EET_GUI_EVENT;
-        e.GUIEvent.Caller = this;
-        e.GUIEvent.Element = 0;
-        e.GUIEvent.EventType = EGET_ELEMENT_CLOSED;
+        if(!Parent)
+            return;
 
-        // if the event was not absorbed
-        if (!Parent->OnEvent(e))
-            remove();
+        if(Modal)
+        {
+            Parent->remove();
+            Environment->setFocus(Environment->getRootGUIElement());            
+            return;
+        }
+
+        remove();
     }
 
     //! called if an event happened.
@@ -164,6 +164,13 @@ namespace Tubras
                         }
                     }
                     break;
+        case EET_KEY_INPUT_EVENT:
+            if(event.KeyInput.Key == KEY_ESCAPE)
+            {
+                closeDialog();
+                return true;
+            }
+            break;
         case EET_MOUSE_INPUT_EVENT:
             switch(event.MouseInput.Event)
             {
