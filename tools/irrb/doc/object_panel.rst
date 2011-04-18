@@ -4,7 +4,7 @@ Object Panel
 .. toctree::
    :maxdepth: 2
 
-The irrB Object panel is designed to control Irrlicht scene node information 
+The **irrB** Object panel is designed to control Irrlicht scene node information 
 that is exported to a scene (.irr) file. 
 
 .. image:: _static/img005.png 
@@ -17,11 +17,11 @@ exported as an Irrlicht mesh scene node, light to light, and camera to camera.
 Irrlicht scene node types such as Billboard, Volumetric Light, and Water
 Surface nodes will need to be explicitly set in the **Type** field of the
 object panel because Blender doesn't have a corresponding object type.
-What's more is if your application contains a custom scene node type, irrB 
+What's more is if your application contains a custom scene node type, **irrB**
 allows you set a custom scene node type.
 
 The object panel also contains an easy to use field for explicitly
-controlling whether or not an object is exported by irrB.  By default all
+controlling whether or not an object is exported by **irrB**.  By default all
 objects in Blender's visible layers are exported. There are occasions where
 it isn't desirable to export all objects in a visible layer.  A good example
 of this would be when a scene contains a mesh that has been added in order
@@ -46,7 +46,7 @@ Custom Scene Node Properties
 ----------------------------
 
 Blender allows you to attach "custom" integer, string, bool, and/or float 
-properties to any Blender object.  When irrB detects that an object contains 
+properties to any Blender object.  When **irrB** detects that an object contains 
 custom Blender properties, those properties are then exported into the 
 corresponding scene nodes "user attributes". 
 

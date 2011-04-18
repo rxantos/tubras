@@ -7,7 +7,7 @@ Interface Overview
 .. image:: _static/img012.png 
    :align: right
 
-The irrB interface includes three Blender addon property panels.
+The **irrB** interface includes three Blender addon property panels.
 
 These property panels allow for specific control when exporting scene
 objects and materials.

@@ -32,11 +32,10 @@ Implemented Features:
 
 Working on for 0.7
 
+* Animation
 * Particles
-* iwalktest Bullet Integration
 
 Todo 
 
-* Sound nodes  
-* Animation
+* Sound nodes
 
