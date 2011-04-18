@@ -9,7 +9,7 @@ Getting Started
 **Key Points**
 
 * Blender Objects are written to Irrlicht scene nodes in a scene file (.irr). 
-* Blender Mesh Objects have their Mesh *Data* written to mesh files (.irrmesh). 
+* Blender Mesh Objects have their Mesh *Data*  written to mesh files (.irrmesh). 
 * Multiple Blender Mesh Objects may link to the same Mesh Data. In this case 
   only a single .irrmesh file will be generated and multiple Mesh nodes will be 
   written to the scene file. 

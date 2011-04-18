@@ -1203,20 +1203,17 @@ def _updateDefaultConfig(bscene):
 
     return gWTConfig.format(**gWTOptions)
 
-#=============================================================================
-#                           w r i t e U s e r D a t a
-#=============================================================================
-def writeUserData(file, i1, i2, bObject, writeClose=True):
-    file.write(i1 + '<userData>\n')
-    file.write(i2 + '<attributes>\n')
-    i3 = i2 + '   '
 
-    for name in bObject.keys():
+#=============================================================================
+#                          w r i t e A t t r i b u t e s
+#=============================================================================
+def writeAttributes(file, indent, target):
+    for name in target.keys():
         # skip private & irrb properties
         if (name[0] == '_') or (name[:4] == 'irrb'):
             continue
 
-        data = bObject[name]
+        data = target[name]
         stype = None
         if isinstance(data, int):
             stype = 'int'
@@ -1234,7 +1231,21 @@ def writeUserData(file, i1, i2, bObject, writeClose=True):
         if stype != None:
             pout = '<{} name="{}" value="{}"/>\n'.format(stype, name,
                 svalue)
-            file.write(i3 + pout)
+            file.write(indent + pout)
+
+#=============================================================================
+#                           w r i t e U s e r D a t a
+#=============================================================================
+def writeUserData(file, i1, i2, bObject, writeClose=True):
+    file.write(i1 + '<userData>\n')
+    file.write(i2 + '<attributes>\n')
+    i3 = i2 + '   '
+    
+    writeAttributes(file, i3, bObject)
+    try:
+        writeAttributes(file, i3, bObject.data)
+    except:
+        pass
 
     if writeClose:
         file.write(i2 + '</attributes>\n')

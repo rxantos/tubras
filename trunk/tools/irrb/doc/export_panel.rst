@@ -5,7 +5,7 @@ Export Panel
    :maxdepth: 2
 
 The Export panel is designed to control what is exported along with the location 
-of the generated output.  If you have installed and configured the irrB utilities, 
+of the generated output.  If you have installed and configured the **irrB** utilities, 
 you may also choose to optionally walktest your exported scene.
 
 .. Note::
