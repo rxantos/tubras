@@ -1135,6 +1135,14 @@ namespace Tubras
             }
             return false;
         }
+        else if(event.EventType == EET_KEY_INPUT_EVENT)
+        {
+            if(event.KeyInput.Char == '`')
+            {
+                this->toggleGUIMode(0);
+                return true;
+            }
+        }
 
         if(m_inputManager)
             return m_inputManager->getHandler()->OnEvent(event);
