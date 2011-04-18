@@ -10,6 +10,9 @@ enum
     GUID_MAIN_MENU_START  = 0x10000,
     GUID_OPEN_SCENE,
 
+    GUID_VIEW_CONSOLE,
+    GUID_VIEW_ANIMATIONS,
+
     GUID_HELP_ABOUT,
     GUID_QUIT
 };
@@ -1127,6 +1130,11 @@ int TWalktest::initialize()
     submenu->addItem(L"Open Scene...", GUID_OPEN_SCENE);
     submenu->addSeparator();
     submenu->addItem(L"Quit", GUID_QUIT);
+
+    // view
+    submenu = mainMenu->getSubMenu(1);
+    submenu->addItem(L"Console", GUID_VIEW_CONSOLE);
+    submenu->addItem(L"Animations", GUID_VIEW_ANIMATIONS);
 
     // help
     submenu = mainMenu->getSubMenu(3);

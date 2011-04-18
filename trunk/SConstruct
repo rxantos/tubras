@@ -764,7 +764,7 @@ Default(envProgs.Program('bin/entitytest','examples/entitytest/entitytest.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/iwalktest',['tools/iwalktest/iwalktest.cpp',
-        'tools/iwalktest/cmdproc.cpp'],        
+        'tools/iwalktest/cmdproc.cpp', 'tools/iwalktest/aboutdlg.cpp'],        
         LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
