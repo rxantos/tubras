@@ -1692,6 +1692,14 @@ def _registerIrrbProperties():
         description='Custom material name',
         default='?', maxlen=64, options=emptySet, subtype='NONE')
 
+    bpy.types.Material.irrb_diffuse = FloatVectorProperty(name='Diffuse',
+        description='Diffuse color',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
     bpy.types.Material.irrb_ambient = FloatVectorProperty(name='Ambient',
         description='Ambient color',
         default=(1.0, 1.0, 1.0),
@@ -1728,6 +1736,10 @@ def _registerIrrbProperties():
     bpy.types.Material.irrb_normalize_normals = \
         BoolProperty(name='Normalize Normals',
         description='Normalize Normals', default=False, options=emptySet)
+
+    bpy.types.Material.irrb_link_diffuse = \
+        BoolProperty(name='Link Diffuse',
+        description='Link Diffuse Color', default=True, options=emptySet)
 
     bpy.types.Material.irrb_use_mipmaps = BoolProperty(name='Use MipMaps',
         description='Use MipMaps if available', default=True, options=emptySet)
@@ -2073,7 +2085,11 @@ class iMaterial:
                 break
 
         self.attributes['AmbientColor'] = rgb2DelStr(bmat.irrb_ambient)
-        self.attributes['DiffuseColor'] = rgb2DelStr(bmat.diffuse_color)
+        if bmat.irrb_link_diffuse:
+            self.attributes['DiffuseColor'] = rgb2DelStr(bmat.diffuse_color)
+        else:
+            self.attributes['DiffuseColor'] = rgb2DelStr(bmat.irrb_diffuse)
+            
         self.attributes['EmissiveColor'] = rgb2DelStr(bmat.irrb_emissive)
         self.attributes['SpecularColor'] = rgb2DelStr(bmat.specular_color)
         self.attributes['Lighting'] = int(bmat.irrb_lighting)
@@ -5447,6 +5463,9 @@ class IrrbMaterialProps(bpy.types.Panel):
         row.prop(mat, 'irrb_use_mipmaps')
 
         row = layout.row()
+        row.prop(mat, 'irrb_link_diffuse')
+        
+        row = layout.row()
         row.label('ZBuffer')
         row.prop(mat, 'irrb_zbuffer', '')
 
@@ -5462,7 +5481,10 @@ class IrrbMaterialProps(bpy.types.Panel):
         row.label(text='Ambient')
         row.prop(mat, 'irrb_ambient', '')
         row.label(text='Diffuse')
-        row.prop(mat, 'diffuse_color', '')
+        if mat.irrb_link_diffuse:
+            row.prop(mat, 'diffuse_color', '')
+        else:
+            row.prop(mat, 'irrb_diffuse', '')
 
         row = layout.row()
         row.label(text='Emissive')
