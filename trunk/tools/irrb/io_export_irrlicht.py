@@ -1680,6 +1680,37 @@ def _registerIrrbProperties():
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=1.0, precision=2,
         options=emptySet, size=3)
+    
+    # Billboard Properties
+    bpy.types.Object.irrb_billboard_shade_top = FloatVectorProperty(name='ShadeTop',
+        description='Shade Top',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+    
+    bpy.types.Object.irrb_billboard_shade_bot = FloatVectorProperty(name='ShadeBot',
+        description='Shade Bottom',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+    
+    bpy.types.Object.irrb_billboard_width = FloatProperty(name='Width',
+        description='Width', default=1.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_billboard_height = FloatProperty(name='Height',
+        description='Height', default=1.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
 
     # Material Properties
     bpy.types.Material.irrb_type = EnumProperty(name='Material Type',
@@ -3065,11 +3096,11 @@ class iScene:
         height = math.fabs(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)))
 
         file.write(i2 + '<int name="Width" ' \
-            'value="{:.6f}" />\n'.format(width))
+            'value="{:.6f}" />\n'.format(bObject.irrb_billboard_width))
         file.write(i2 + '<int name="Height" ' \
-            'value="{:.6f}" />\n'.format(height))
-        file.write(i2 + '<color name="Shade_Top" value="ffffffff" />\n')
-        file.write(i2 + '<color name="Shade_Down" value="ffffffff" />\n')
+            'value="{:.6f}" />\n'.format(bObject.irrb_billboard_height))
+        file.write(i2 + '<color name="Shade_Top" value="{}" />\n'.format(rgb2str(bObject.irrb_billboard_shade_top)))
+        file.write(i2 + '<color name="Shade_Down" value="{}" />\n'.format(rgb2str(bObject.irrb_billboard_shade_bot)))
 
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
@@ -5635,6 +5666,17 @@ class IrrbObjectProps(bpy.types.Panel):
                 row.prop(obj, 'irrb_volight_tailcol')
                 row = layout.row()
                 row.prop(obj, 'irrb_volight_dimension')
+            elif itype == NT_BILLBOARD:
+                row = layout.row()
+                row.label('Billboard Options:')
+                row = layout.row()
+                row.prop(obj, 'irrb_billboard_shade_top')
+                row = layout.row()
+                row.prop(obj, 'irrb_billboard_shade_bot')
+                row = layout.row()
+                row.prop(obj, 'irrb_billboard_width')
+                row = layout.row()
+                row.prop(obj, 'irrb_billboard_height')
 
 if __name__ == '__main__':
     register()
