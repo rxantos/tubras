@@ -2871,12 +2871,12 @@ class iScene:
             return
 
         material = iMaterial(bObject, 'skybox', self.exporter, None)
-        topImage = sImages[0]
-        botImage = sImages[1]
-        leftImage = sImages[2]
-        rightImage = sImages[3]
-        frontImage = sImages[4]
-        backImage = sImages[5]
+        topImage = sImages['top'].image
+        botImage = sImages['bottom'].image
+        leftImage = sImages['left'].image
+        rightImage = sImages['right'].image
+        frontImage = sImages['front'].image
+        backImage = sImages['back'].image
 
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
@@ -4354,8 +4354,8 @@ class iExporter:
                                 self.gObjectLevel, 'skyBox')
                             self.gIScene.writeSkyBoxNodeData(self.sfile,
                                 bObject, sImages, self.gObjectLevel)
-                            for image in sImages:
-                                self._saveImage(image)
+                            for image in sImages.keys():
+                                self._saveImage(sImages[image].image)
                 elif itype == NT_SKYDOME:
                     if self.sfile:
                         sImage = self._validateSkyDome(bObject)
@@ -4489,6 +4489,44 @@ class iExporter:
 
         bImage = mesh.uv_textures[0].data[faces[0].index].image
         return bImage
+    
+    
+    #=========================================================================
+    #                    _ g e t S k y B o x T e x t u r e s
+    #=========================================================================
+    def _getSkyBoxTextures(self, obj):
+    
+        if len(obj.material_slots) < 1:
+            addWarning('SkyBox missing material')
+            return None
+    
+        mat = obj.material_slots[0].material
+        tslots = [mat.texture_slots[i] for i in range(len(mat.texture_slots)) \
+                  if mat.texture_slots[i]]
+
+        if len(tslots) < 6:
+            addWarning('SkyBox material "{}" missing required textures')
+            return None
+
+        tnames = ['left', 'right', 'top', 'bottom', 'front', 'back']    
+    
+        tcount = 0
+    
+        textures = {}
+    
+        for tslot in tslots:
+            tex = tslot.texture
+            tname = tex.name.lower()
+            if (tex.type == 'IMAGE') and (tname in tnames):
+                tcount += 1
+                tnames.remove(tname)
+                textures[tname] = tex
+    
+        if (tcount >= 6) and len(tnames) == 0:
+            return textures
+    
+        addWarning('SkyBox material "{}" missing required textures')
+        return None
 
     #=========================================================================
     #                        _ v a l i d a t e S k y B o x
@@ -4500,54 +4538,9 @@ class iExporter:
             msg = 'Ignoring skybox: {}, not a mesh object.'.format(mesh.name)
             addWarning(msg)
             return None
+                
+        return self._getSkyBoxTextures(bObject)
 
-        if len(mesh.uv_textures) == 0:
-            msg = 'Ignoring skybox: {}, no UV Map.'.format(mesh.name)
-            addWarning(msg)
-            return None
-
-        faces = mesh.faces
-        if len(faces) != 6:
-            msg = 'Ignoring skybox: {}, ' \
-                'invalid face count: {}'.format(mesh.name, len(faces))
-            addWarning(msg)
-            return None
-
-        topImage = botImage = leftImage = \
-        rightImage = frontImage = backImage = None
-        for face in faces:
-            no = face.normal
-            # top / bottom?
-            fimage = mesh.uv_textures[0].data[face.index].image
-
-            if fuzzyZero(no.x) and fuzzyZero(no.y):
-                if no.z == -1.0:
-                    topImage = fimage
-                elif no.z == 1.0:
-                    botImage = fimage
-            # left / right?
-            elif fuzzyZero(no.y) and fuzzyZero(no.z):
-                if no.x == -1.0:
-                    rightImage = fimage
-                elif no.x == 1.0:
-                    leftImage = fimage
-            #front / back?
-            elif fuzzyZero(no.x) and fuzzyZero(no.z):
-                if no.y == -1.0:
-                    frontImage = fimage
-                elif no.y == 1.0:
-                    backImage = fimage
-
-        if (topImage == None or botImage == None or
-            leftImage == None or rightImage == None or
-            frontImage == None or backImage == None):
-            msg = 'Ignoring skybox: {}, ' \
-                'not all faces assigned images'.format(mesh.name)
-            addWarning(msg)
-            return None
-
-        return (topImage, botImage, leftImage, rightImage, frontImage,
-            backImage)
 
     #=========================================================================
     #                      _ v a l i d a t e S k y D o m e
