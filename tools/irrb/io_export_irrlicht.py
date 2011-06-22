@@ -1711,7 +1711,7 @@ def _registerIrrbProperties():
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
-
+    
     # Material Properties
     bpy.types.Material.irrb_type = EnumProperty(name='Material Type',
         items=tuple([(mat[0], mat[1], '') for mat in irrMaterialTypes]),
@@ -4501,6 +4501,10 @@ class iExporter:
             return None
     
         mat = obj.material_slots[0].material
+        if not mat:
+            addWarning('SkyBox missing material')
+            return None
+        
         tslots = [mat.texture_slots[i] for i in range(len(mat.texture_slots)) \
                   if mat.texture_slots[i]]
 
@@ -4552,21 +4556,25 @@ class iExporter:
             msg = 'Ignoring skydome: {}, not a mesh object.'.format(mesh.name)
             addWarning(msg)
             return None
-
-        if len(mesh.uv_textures) == 0:
-            msg = 'Ignoring skydome: {}, '\
-                'texture not assigned.'.format(mesh.name)
-            addWarning(msg)
+        
+        mat = bObject.material_slots[0].material
+        if not mat:
+            addWarning('SkyDome missing material')
             return None
-        faces = mesh.faces
-        if len(faces) < 1:
-            msg = 'Ignoring skydome: {}, ' \
-                'invalid face count: {}'.format(mesh.name, len(faces))
-            addWarning(msg)
-            return None
+        
+        tslots = [mat.texture_slots[i] for i in range(len(mat.texture_slots)) \
+                  if mat.texture_slots[i]]
 
-        # use image assigned to 1st uv layer
-        return mesh.uv_textures[0].data[faces[0].index].image
+        if len(tslots) < 1:
+            addWarning('SkyDome material "{}" missing required texture'.format(mat.name))
+            return None
+        
+        tex = tslots[0].texture
+        if tex.type == 'IMAGE':
+            return tex.image
+        
+        addWarning('SkyDome textures slot not an image')
+        return None
 
     #=========================================================================
     #                _ v a l i d a t e V o l u m e L i g h t

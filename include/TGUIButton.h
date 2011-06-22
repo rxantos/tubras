@@ -94,6 +94,11 @@ namespace Tubras
 
         virtual void setType(EGUI_ELEMENT_TYPE type) { Type = type; }
 
+		//! Gets the override font (if any)
+		virtual IGUIFont* getOverrideFont() const;
+		//! Get the font which is used right now for drawing
+		virtual IGUIFont* getActiveFont() const;
+
     private:
 
         struct ButtonSprite
