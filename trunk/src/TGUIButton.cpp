@@ -318,8 +318,6 @@ namespace Tubras
         IGUIElement::draw();
     }
 
-
-
     //-----------------------------------------------------------------------
     //                      s e t O v e r r i d e F o n t
     //-----------------------------------------------------------------------
@@ -334,6 +332,26 @@ namespace Tubras
             OverrideFont->grab();
     }
 
+    //-----------------------------------------------------------------------
+    //                     g e t O v e r r i d e F o n t
+    //-----------------------------------------------------------------------
+    IGUIFont * TGUIButton::getOverrideFont() const
+    {
+        return OverrideFont;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      g e t A c t i v e F o n t
+    //-----------------------------------------------------------------------
+    IGUIFont* TGUIButton::getActiveFont() const
+    {
+        if ( OverrideFont )
+            return OverrideFont;
+        IGUISkin* skin = Environment->getSkin();
+        if (skin)
+            return skin->getFont();
+        return 0;
+    }
 
     //-----------------------------------------------------------------------
     //                          s e t I m a g e
