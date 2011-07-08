@@ -15,7 +15,7 @@ irrB Documentation Contents
    outgen
    iwalktest
    camlight
-   billboards
+   billboard
    skyboxdome
    fog
    physics
