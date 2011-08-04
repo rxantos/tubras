@@ -1924,9 +1924,7 @@ def _registerIrrbProperties():
 #=============================================================================
 # this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_func(self, context):
-    default_path = bpy.data.filepath.replace('.blend', '.irr')
-    self.layout.operator(IrrbExportOp.bl_idname,
-        text='Irrlicht (.irr/.irrmesh)').filepath = default_path
+    self.layout.operator(IrrbExportOp.bl_idname, text='Irrlicht (.irr/.irrmesh)')
         
 #=============================================================================
 #                              r e g i s t e r
