@@ -313,9 +313,13 @@ if gExtras < 0 or gExtras > 1:
     gExtras = 1
 
 if gPlatform == 'win32':
-    gIncludeD3D9 = int(ARGUMENTS.get('d3d9', gIncludeD3D9))
-    if gIncludeD3D9 < 0 or gIncludeD3D9 > 1:
-        gIncludeD3D9 = 1
+    if 'DXSDK_DIR' in os.environ:
+        gIncludeD3D9 = int(ARGUMENTS.get('d3d9', gIncludeD3D9))
+        if gIncludeD3D9 < 0 or gIncludeD3D9 > 1:
+            gIncludeD3D9 = 1
+            print('DXSDK_DIR environment variable missing - disabling')
+    else:
+        gIncludeD3D9 = 0
 
 tarch = int(ARGUMENTS.get('arch',0))
 
