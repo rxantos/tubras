@@ -1383,16 +1383,16 @@ def _registerIrrbProperties():
             description='Walktest after export', default=True,
             options=emptySet)
 
-    if len(gWalkTestPath.strip()) > 0:
-        gWalkTestPath32 = gWalkTestPath
-        wtBin = gWalkTestPath.split()[0]
-        wtApp = os.path.basename(wtBin)
-        wtDir = os.path.dirname(wtBin) + os.path.sep
-        wtDir64 = wtDir + 'x64' + os.path.sep
-        wtApp64 = wtDir64 + wtApp
-        if os.path.exists(wtApp64):
-            gWalkTestPath64 = '{} {}'.format(wtApp64, \
-                ' '.join(gWalkTestPath.split()[1:]))
+        if len(gWalkTestPath.strip()) > 0:
+            gWalkTestPath32 = gWalkTestPath
+            wtBin = gWalkTestPath.split()[0]
+            wtApp = os.path.basename(wtBin)
+            wtDir = os.path.dirname(wtBin) + os.path.sep
+            wtDir64 = wtDir + 'x64' + os.path.sep
+            wtApp64 = wtDir64 + wtApp
+            if os.path.exists(wtApp64):
+                gWalkTestPath64 = '{} {}'.format(wtApp64, \
+                    ' '.join(gWalkTestPath.split()[1:]))
 
     bpy.types.Scene.irrb_wt_bits = EnumProperty(name='Bits',
         items=(('BITS_32', '32bit', ''),
@@ -5061,7 +5061,6 @@ class iExporter:
         if self.gRunWalkTest:
             self.gCfgString = _updateDefaultConfig(self.gBScene)
 
-        wtEnv = os.environ['IWALKTEST']
         if self.gExportPack:
             zipFileName = '{}{}.zip'.format(self.gSceneDir,
                 self.gBScene.name)
@@ -5091,6 +5090,7 @@ class iExporter:
 
         exeFileName = None
         if self.gExportExec:
+            wtEnv = os.environ['IWALKTEST']
             # copy iwalktest data to scene directory & zip
             srcDatDir = '{}{}data'.format(os.path.dirname(wtEnv), os.sep)
             dstDatDir = self.gSceneDir + 'data'
@@ -5325,9 +5325,10 @@ class IrrbSceneProps(bpy.types.Panel):
         sub.active = sceneEnabled
         sub.prop(context.scene, 'irrb_export_pack')
 
-        sub = rcol.column()
-        sub.active = sceneEnabled & gHaveWalkTest
-        sub.prop(context.scene, 'irrb_export_makeexec')
+        if gHaveWalkTest:
+            sub = rcol.column()
+            sub.active = sceneEnabled & gHaveWalkTest
+            sub.prop(context.scene, 'irrb_export_makeexec')
 
         sub = rcol.column()
         sub.active = ('IMESHCVT' in os.environ) & sceneEnabled
