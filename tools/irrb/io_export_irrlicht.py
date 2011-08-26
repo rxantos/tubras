@@ -5200,7 +5200,7 @@ class IrrbExportOp(bpy.types.Operator):
         if gWalkTestPath != None:
             runWalkTest = walktest
 
-        self.report('INFO', 'irrb Exporter Start.')
+        self.report({'INFO'}, 'irrb Exporter Start.')
         write(self.properties.filepath, self, context,
               _G['export']['out_directory'],
               scene.irrb_export_scene,
