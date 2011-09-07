@@ -12,7 +12,7 @@ bl_info = {
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
     'blender': (2, 5, 7),
-    'api': 35622,
+    'api': 39685,
     'location': 'File > Import-Export',
     'warning': '',
     'wiki_url': 'http://code.google.com/p/tubras/wiki/irrb',
@@ -131,6 +131,7 @@ NT_SKYBOX = 2
 NT_SKYDOME = 3
 NT_VOLUMETRICLIGHT = 4
 NT_WATERSURFACE = 5
+NT_CUSTOM = 6
 
 # property material types
 EMT_SOLID = 0
@@ -1546,11 +1547,16 @@ def _registerIrrbProperties():
         ('SKYDOME', 'Skydome', 'skydome type'),
         ('VOLLIGHT', 'Volumetric Light', 'volumetric light type'),
         ('WATERSURFACE', 'Water Surface', 'water surface'),
+        ('CUSTOM', 'Custom', 'custom scene node'),
         ),
         default='DEFAULT',
         description='Irrlicht scene node type',
         options=emptySet)
-
+    
+    bpy.types.Object.irrb_custom_node_type = StringProperty(name='CustomNodeType',
+        description='Custom node type',
+        default='?', maxlen=64, options=emptySet, subtype='NONE')
+    
     bpy.types.Object.irrb_node_culling = EnumProperty(name='Automatic Culling',
         items=(('CULL_OFF', 'Off', ''),
         ('CULL_BOX', 'Box', ''),
@@ -4391,7 +4397,15 @@ class iExporter:
                             self.gIScene.writeBillboardNodeData(self.sfile,
                                 bObject, bbImage, self.gObjectLevel)
                             self._saveImage(bbImage)
-
+                elif itype == NT_CUSTOM:
+                    self.gIScene.writeNodeHead(self.sfile, self.gObjectLevel,
+                        bObject.irrb_custom_node_type)
+                    if type == 'MESH':
+                        self._exportMesh(bObject)
+                    else:
+                        self.gIScene.writeEmptyObject(self.sfile, bObject,
+                            self.gObjectLevel)                        
+                    self.gObjectCount += 1                    
                 else:
                     # display invalid "inodetype" warning
                     addWarning('Object "{}", has invalid ' \
@@ -5606,6 +5620,12 @@ class IrrbObjectProps(bpy.types.Panel):
             row.label(text='Type')
             row.prop(obj, 'irrb_node_type', '')
             row = layout.row()
+            
+            if ('irrb_node_type' in obj) and (obj['irrb_node_type'] == NT_CUSTOM):
+                row.label(text='Custom Type')
+                row.prop(obj, 'irrb_custom_node_type', '')
+                row = layout.row()
+            
             row.label(text='Automatic Culling')
             row.prop(obj, 'irrb_node_culling', '')
             row = layout.row()
