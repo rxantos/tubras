@@ -35,8 +35,9 @@ walktest related options to appear.
 Basic Export Options
 --------------------
 
-.. image:: _static/img002.png 
-   :align: right
+.. container:: irrb-right
+
+	.. image:: _static/img002.png    
 
 **Export** - The export button initiates the export process.  
 
@@ -87,8 +88,9 @@ using the Irrlicht rendering engine.
 Walktest Options
 ----------------
 
-.. image:: _static/img003.png 
-   :align: right
+.. container:: irrb-left
+
+   .. image:: _static/img003.png 
 
 When the Walktest check box is selected, the following additional options
 will appear in the export panel.
@@ -132,8 +134,9 @@ used to indicate no velocity damping.
 Physics Options
 ----------------
 
-.. image:: _static/img004.png 
-   :align: right
+.. container:: irrb-right
+
+   .. image:: _static/img004.png 
 
 When the Physics and Walktest check boxes are selected, the following additional 
 options will appear in the export panel.

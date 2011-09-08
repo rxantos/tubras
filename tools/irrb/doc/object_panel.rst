@@ -7,8 +7,9 @@ Object Panel
 The **irrB** Object panel is designed to control Irrlicht scene node information 
 that is exported to a scene (.irr) file. 
 
-.. image:: _static/img005.png 
-   :align: left
+.. container:: irrb-left
+
+   .. image:: _static/img005.png 
 
 By default, Blender objects are mapped directly to their corresponding
 Irrlicht scene node types.  For example, a Blender mesh object will be
@@ -34,13 +35,12 @@ For example, if the currently selected Blender object is a mesh and the Type
 is left to **default**, "Automatic Culling", "Hardware Hint/Type", and
 "Octree Node" options will appear in the object panel.
 
-.. Note::
-   **All** objects exported to a scene have a corresponding **ID**.  An ID
-   is an integer value the defaults to -1 and may be used by your program to
-   locate one or more objects after a scene file has been loaded.
+Note that **All** objects exported to a scene have a corresponding **ID**.  An ID
+is an integer value the defaults to -1 and may be used by your program to
+locate one or more objects after a scene file has been loaded.
 
-   For more information, see `getSceneNodeFromId() <http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_manager.html>`_ 
-   in the Irrlicht API documentation.
+For more information, see `getSceneNodeFromId() <http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_manager.html>`_ 
+in the Irrlicht API documentation.
 
 Custom Scene Node Properties
 ----------------------------

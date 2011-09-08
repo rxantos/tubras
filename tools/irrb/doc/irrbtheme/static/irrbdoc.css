@@ -337,9 +337,22 @@ div.viewcode-block:target {
     border-bottom: 1px solid #ac9;
 }
 
-img.align-right, .figure.align-right, object.align-right {
+div.irrb-right {
 	clear: none;
-    float: right;
-    margin-left: 1em;
+	float: right;
+	margin: 5px 5px 5px 15px;
+	border: 1px solid #AFC1C4;
+	box-shadow: 5px 5px 10px #000000;
+	-webkit-box-shadow: 5px 5px 10px #000000;
+	-moz-box-shadow: 5px 5px 10px #000000;
 }
 
+div.irrb-left {
+	clear: none;
+	float: left;
+	margin: 5px 20px 5px 5px;
+	border: 1px solid #AFC1C4;
+	box-shadow: 5px 5px 10px #000000;
+	-webkit-box-shadow: 5px 5px 10px #000000;
+	-moz-box-shadow: 5px 5px 10px #000000;
+}
