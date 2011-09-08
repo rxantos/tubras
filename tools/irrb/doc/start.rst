@@ -45,8 +45,8 @@ displayed in a scene multiple times at different positions and/or scales.
 The Irrlicht Scene File (.irr)
 ------------------------------
 
-The native Irrlicht scene file format is simply an XML file which contains
-object information for all objects contained in a scene. For example, when a
+The native Irrlicht scene file format is simply an XML file which includes 
+information for all objects contained in a scene. For example, when a
 mesh object is exported to an Irrlicht scene file (.irr), the following XML 
 data is written::
 

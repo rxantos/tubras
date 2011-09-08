@@ -4,15 +4,14 @@ Installation
 .. toctree::
    :maxdepth: 2
 
-The latest stable download of **irrB** is accessible from both the "Project Home" and 
-"Downloads" tabs of the Tubras Google Code project. On the "Project Home" tab, 
-**irrB** is listed in the "Featured Downloads" section. 
+The latest stable download of **irrB** is accessible from both the "Project Home" 
+and "Downloads" tabs of the Tubras Google Code project. On the "Project Home" 
+tab, **irrB** is listed in the "Featured Downloads" section.
 
+The current version may be downloaded from here: http://tubras.googlecode.com/files/irrb-0.6.zip
+ 
 .. image:: _static/img001.png 
-   :align: right 
-
-The current version may be downloaded from here: 
-http://tubras.googlecode.com/files/irrb-0.6.zip 
+   :align: right
 
 The contents of the zip package are: 
 
@@ -42,6 +41,6 @@ may be found here: **irrB** Utilities
 
 Requirements
 ------------
-* Blender - Supported Blender Versions are 2.57+
+* Blender - Supported Blender Versions are 2.59+
 * Python - **irrB** uses Blender's internal version of Python 3.x so you are not required to install Python.
 
