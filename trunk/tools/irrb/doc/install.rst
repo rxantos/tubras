@@ -9,9 +9,10 @@ and "Downloads" tabs of the Tubras Google Code project. On the "Project Home"
 tab, **irrB** is listed in the "Featured Downloads" section.
 
 The current version may be downloaded from here: http://tubras.googlecode.com/files/irrb-0.6.zip
- 
-.. image:: _static/img001.png 
-   :align: right
+
+.. container:: irrb-right
+
+	.. image:: _static/img001.png 
 
 The contents of the zip package are: 
 

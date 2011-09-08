@@ -11,8 +11,9 @@ In cases where there is a direct match between a Blender material property
 and an Irrlicht material property, irrB will use the Blender property and
 include an additional panel element in the irrB material panel. 
 
-.. image:: _static/img010.png 
-   :align: left
+.. container:: irrb-left
+
+   .. image:: _static/img010.png 
 
 For example, Blender and Irrlicht both have a "Diffuse" material attribute.
 You can set the Diffuse color using Blender's GUI element, or in the irrB
