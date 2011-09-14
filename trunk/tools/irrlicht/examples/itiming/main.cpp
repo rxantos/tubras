@@ -29,14 +29,6 @@ static timing::CTimingManager* m_timingManager;
 static timing::IAnimator*   m_animators[10]={0,0,0,0,0,0,0,0,0,0};
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
-static SKeyMap keyMap[]={
-    {EKA_MOVE_FORWARD, KEY_KEY_W},
-    {EKA_STRAFE_LEFT, KEY_KEY_A},
-    {EKA_MOVE_BACKWARD, KEY_KEY_S},
-    {EKA_STRAFE_RIGHT, KEY_KEY_D}
-    //{EKA_JUMP_UP, KEY_SPACE}
-};
-
 using namespace irr::timing;
 
 IGUIEnvironment* getGUI()
@@ -139,6 +131,19 @@ class AnimationTarget1 : public CTimingTargetAdapter
 //-----------------------------------------------------------------------------
 static bool _init()
 {
+
+    static SKeyMap keyMap[5];
+    keyMap[0].Action = EKA_MOVE_FORWARD;
+    keyMap[0].KeyCode = KEY_KEY_W;
+    keyMap[1].Action = EKA_STRAFE_LEFT;
+    keyMap[1].KeyCode = KEY_KEY_A;
+    keyMap[2].Action = EKA_MOVE_BACKWARD;
+    keyMap[2].KeyCode = KEY_KEY_S;
+    keyMap[3].Action = EKA_STRAFE_RIGHT;
+    keyMap[3].KeyCode = KEY_KEY_D;
+    keyMap[4].Action = EKA_JUMP_UP;
+    keyMap[4].KeyCode = KEY_SPACE;
+
     m_eventReceiver = new EventReceiver();
     SIrrlichtCreationParameters cp;
     cp.DriverType = m_driverType;

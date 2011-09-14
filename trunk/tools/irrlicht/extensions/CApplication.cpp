@@ -190,13 +190,18 @@ namespace irr
     int CApplication::init()
     {
         SIrrlichtCreationParameters cp;
-        static SKeyMap keyMap[]={
-            {EKA_MOVE_FORWARD, KEY_KEY_W},
-            {EKA_STRAFE_LEFT, KEY_KEY_A},
-            {EKA_MOVE_BACKWARD, KEY_KEY_S},
-            {EKA_STRAFE_RIGHT, KEY_KEY_D},
-            {EKA_JUMP_UP, KEY_SPACE}
-        };
+        static SKeyMap keyMap[5];
+        keyMap[0].Action = EKA_MOVE_FORWARD;
+        keyMap[0].KeyCode = KEY_KEY_W;
+        keyMap[1].Action = EKA_STRAFE_LEFT;
+        keyMap[1].KeyCode = KEY_KEY_A;
+        keyMap[2].Action = EKA_MOVE_BACKWARD;
+        keyMap[2].KeyCode = KEY_KEY_S;
+        keyMap[3].Action = EKA_STRAFE_RIGHT;
+        keyMap[3].KeyCode = KEY_KEY_D;
+        keyMap[4].Action = EKA_JUMP_UP;
+        keyMap[4].KeyCode = KEY_SPACE;
+
         int result=0;
         stringc msg;
 
