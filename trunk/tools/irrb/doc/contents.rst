@@ -12,8 +12,9 @@ irrB Documentation Contents
    object_panel
    material_panel
    custom
-   outgen
+   outgen   
    iwalktest
+   irrbmesh
    camlight
    billboard
    skyboxdome
