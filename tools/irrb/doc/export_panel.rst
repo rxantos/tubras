@@ -73,7 +73,7 @@ option will only appear if the iwalktest utility has been installed and
 properly configured.
 
 **Binary Meshes** - Check box used to indicate whether or not to convert mesh files to 
-the experimental ".irrbmesh" (binary .irrmesh) fromat. This option will only appear if 
+the experimental ".irrbmesh" (binary .irrmesh) format. This option will only appear if 
 you have the imeshcvt utility installed and properly configured. For more information 
 on the .irrbmesh format, see the section named "Binary Mesh Format". 
 

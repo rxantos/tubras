@@ -27,7 +27,7 @@ and install it as a Blender **addon**.
 1. Start Blender and call up the **User Preferences** dialog (File | User Preferences..).  
 2. Click on the **Add-Ons** tab and then the **Install Add-On...** button located at 
    the bottom of the dialog.
-3. Navigate to the directory that you previously unzipped the **irrB** zip file to, select 
+3. Navigate to the directory where you previously unzipped the **irrB** zip file into, select 
    the file **io_export_irrlicht.py**, and then click the **Install Add-On...** button. 
 4. Locate the **irrB** exporter in the **Import-Export** section and enable it by selecting 
    the corresponding check box. 
@@ -38,7 +38,7 @@ If you don't click **Save As Default**, you will need activate the **irrB** add-
 time you start up Blender. 
 
 Documentation on installing and configuring "iwalktest" for both Windows and Linux 
-may be found here: **irrB** Utilities 
+may be found here in :doc:`irrB Utilities </utilities>`.
 
 Requirements
 ------------
