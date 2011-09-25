@@ -20,7 +20,7 @@ body {
     letter-spacing: -0.01em;
     line-height: 150%;
     text-align: center;
-    background-color: #BFD1D4;
+    background-color: #373C3F;
     color: black;
     padding: 0;
     border: 1px solid #aaa;
@@ -99,7 +99,7 @@ div.sphinxsidebar h3, div.sphinxsidebar h4 {
     padding: 0.1em 0 0.1em 0.5em;
     color: white;
     border: 1px solid #86989B;
-    background-color: #AFC1C4;
+    background-color: #586164;
 }
 
 div.sphinxsidebar h3 a {
@@ -117,9 +117,15 @@ div.sphinxsidebar ul ul {
     margin-left: 20px;
 }
 
+div.sphinxsidebar input {
+    border: 1px solid #BDC58F;
+    font-family: sans-serif;
+    font-size: 1em;
+}
+
 div.footer {
-    background-color: #E3EFF1;
-    color: #86989B;
+    background-color: #E8F0CB;
+    color: #BDC58F;
     padding: 3px 8px 3px 0;
     clear: both;
     font-size: 0.8em;
@@ -154,7 +160,7 @@ h1 {
     margin: 0;
     padding: 0.7em 0 0.3em 0;
     font-size: 1.5em;
-    color: #11557C;
+    color: #373C3F;
 }
 
 h2 {
@@ -299,7 +305,7 @@ div.warning p.admonition-title {
     color: white;
     border-bottom: 1px solid #86989B;
     font-weight: bold;
-    background-color: #AFC1C4;
+    background-color: #586164;
 }
 
 div.warning {
