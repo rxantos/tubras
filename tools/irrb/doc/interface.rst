@@ -1,5 +1,6 @@
+==================
 Interface Overview
-=======================
+==================
 
 .. toctree::
    :maxdepth: 2
@@ -17,7 +18,6 @@ when exporting scene objects and materials.
 .. image:: _static/img012.png 
    :align: left
 
-
 :doc:`Export Panel </export_panel>`
 
 The **export** property panel is located in the Blender's scene properties. This panel
@@ -29,7 +29,6 @@ your scene after exporting.
 The **object** property panel is located in the Blender's object properties.  This
 panel allows you to set an object's scene node ID, the object type, and type
 dependent properties.
-
 
 :doc:`Material Panel </material_panel>`
 

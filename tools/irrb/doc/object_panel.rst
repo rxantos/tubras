@@ -1,3 +1,4 @@
+============
 Object Panel
 ============
 
@@ -43,7 +44,7 @@ For more information, see `getSceneNodeFromId() <http://irrlicht.sourceforge.net
 in the Irrlicht API documentation.
 
 Custom Scene Node Properties
-----------------------------
+============================
 
 Blender allows you to attach "custom" integer, string, bool, and/or float 
 properties to any Blender object.  When **irrB** detects that an object contains 
@@ -61,7 +62,7 @@ application. For example, "spawn points":
   accordingly.
 
 Common Options
---------------
+==============
 
 **Export Object** - Indicator used to control whether or not a object is
 exported.
@@ -70,7 +71,7 @@ exported.
 locate a specific scene node or group of scene nodes.
 
 Mesh Object Options
--------------------
+===================
 
 **Automatic Culling** - 
 
@@ -81,9 +82,9 @@ Mesh Object Options
 **Octree Node** - 
 
 Light Object Options
---------------------
+====================
 
 Camera Object Options
----------------------
+=====================
 
 

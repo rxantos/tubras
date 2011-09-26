@@ -1,7 +1,8 @@
-irrb Notes
-==============
+==========
+irrB Notes
+==========
 
 .. toctree::
    :maxdepth: 2
 
-irrb Notes.
+irrB Notes.

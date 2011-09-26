@@ -1,3 +1,4 @@
+============
 Export Panel
 ============
 
@@ -33,7 +34,7 @@ walktest related options to appear.
 
 
 Basic Export Options
---------------------
+====================
 
 .. container:: irrb-right
 
@@ -86,7 +87,7 @@ Utilitiles" contains a program that you may use to examine an exported scene
 using the Irrlicht rendering engine.
 
 Walktest Options
-----------------
+================
 
 .. container:: irrb-left
 
@@ -132,7 +133,7 @@ resolutions.
 used to indicate no velocity damping.
 
 Physics Options
-----------------
+===============
 
 .. container:: irrb-right
 
@@ -164,5 +165,5 @@ character controller.
 **Time Step** - The Bullet time step to use.
 
 Notes     
------
+=====
 
