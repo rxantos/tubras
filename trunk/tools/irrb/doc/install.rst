@@ -1,3 +1,4 @@
+============
 Installation
 ============
 
@@ -41,7 +42,7 @@ Documentation on installing and configuring "iwalktest" for both Windows and Lin
 may be found here in :doc:`irrB Utilities </utilities>`.
 
 Requirements
-------------
+============
+
 * Blender - Supported Blender Versions are 2.59+
 * Python - **irrB** uses Blender's internal version of Python 3.x so you are not required to install Python.
-

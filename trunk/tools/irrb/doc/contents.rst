@@ -1,3 +1,4 @@
+===========================
 irrB Documentation Contents
 ===========================
 
@@ -24,6 +25,7 @@ irrB Documentation Contents
    config
    notes
    faq
+   changelog
 
 Indices and tables
 ==================

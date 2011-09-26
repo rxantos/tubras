@@ -1,3 +1,4 @@
+===============
 Getting Started
 ===============
 .. highlight:: cpp
@@ -6,7 +7,8 @@ Getting Started
 .. toctree::
    :maxdepth: 2
 
-**Key Points**
+Key Points
+==========
 
 * Blender Objects are written as Irrlicht scene nodes to an Irrlicht scene file (.irr). 
 * Blender Mesh Objects have their Mesh *Data*  written to mesh files (.irrmesh). 
@@ -42,8 +44,11 @@ It's important to understand that multiple objects (of the same type) may
 reference the same object data. For example, you may have a single mesh 
 displayed in a scene multiple times at different positions and/or scales. 
 
+.. index:: 
+	pair: Irrlicht; .irr Scene File
+
 The Irrlicht Scene File (.irr)
-------------------------------
+==============================
 
 The native Irrlicht scene file format is simply an XML file which includes 
 information for all objects contained in a scene. For example, when a

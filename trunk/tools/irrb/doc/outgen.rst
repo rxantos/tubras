@@ -1,3 +1,4 @@
+======================
 Output File Generation
 ======================
 
@@ -5,12 +6,14 @@ Output File Generation
    :maxdepth: 2
 
 
-**Key Points**
+Key Points
+==========
 
 References to mesh and image locations are ALL relative.
 The relative location is based on the location of the "Output Directory" field.
 
-**Details**
+Details
+=======
 
 irrb allows you to choose a single Output Directory.  Depending on whether 
 or not you choose to export a scene file, irrb behaves as follows:
@@ -61,4 +64,3 @@ why a texture isn't appearing properly. The first question to ask yourself:
 its log file "iwalktest.log" which is located in the same directory as the iwalktest 
 executable. Windows users can also check for load errors in the iwalktest console 
 window if it is configured to be displayed (default). 
-

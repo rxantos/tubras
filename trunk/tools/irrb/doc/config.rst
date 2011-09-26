@@ -1,7 +1,8 @@
-.irrb Config
+============
+irrB Config
 ============
 
 .. toctree::
    :maxdepth: 2
 
-The irrb config files (.irrb).
+The irrB config file (.irrb).

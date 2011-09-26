@@ -1,3 +1,4 @@
+==================
 Binary Mesh Format
 ==================
 .. highlight:: cpp
@@ -6,7 +7,8 @@ Binary Mesh Format
 .. toctree::
    :maxdepth: 2
 
-**Key Points**
+Key Points
+==========
  
 	* The binary mesh format is currently **experimental and subject to change**.
 	* irrbmesh files (binary mesh) load into your application very quickly. 
@@ -16,7 +18,7 @@ Binary Mesh Format
 The experimental .irrbmesh binary mesh format is fast loading. Irrlicht's native 
 .irrmesh format is based on XML and all though it's nice for exchanging mesh 
 information, it can be painfully slow to load especially for larger scenes and 
-meshes. The following screen shot displays the load times for a high-poly “yoda” 
+meshes. The following screen shot displays the load times for a high-poly **yoda** 
 mesh exported as .irrmesh and .irrbmesh:
     
 .. image:: _static/img013.png 
@@ -30,7 +32,8 @@ The yoda mesh contains approximately 60k faces in a single mesh buffer. The main
 reason the .irrbmesh format performs so well is that it mimics Irrlicht's 
 internal mesh buffer and material formats. Very little parsing is required.  
 
-**Using .irrbmesh In Your Application**
+Using .irrbmesh In Your Application
+===================================
  
 It is relatively easy to enable your application(s) to read and write .irrbmesh 
 files. Simply save the following files to your applications source directory: 
