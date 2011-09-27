@@ -266,10 +266,11 @@ Help("""
                            1 - irrKlang Sound System
                            2 - FMOD Sound system
 
-       arch=?           Target architecture:
+       arch=?           Target architecture:       
                            0 - build arch (default)
                            1 - x86 
                            2 - x86_64
+                           3 - nacl
 
        docs=?           Enable/Disable documenation generation
                            0 - Disable (default)
@@ -329,6 +330,9 @@ if tarch == 0: # use platform default
         gTargetArch = 'x86_64'
 elif tarch == 2:
     gTargetArch = 'x86_64'
+elif tarch == 3:
+    gTargetArch = 'nacl'
+    gIncludeD3D9 = 0
 
 if int(ARGUMENTS.get('profile',0)):
     gProfiling  = True
@@ -434,12 +438,22 @@ if gTargetArch == 'x86':
     if gDebug:
         tLibName = 'libs/debug/Tubras_d'
         LibPath = ['libs/debug']
-else:
+elif gTargetArch == 'x86_64':
     tLibName = 'libs/release64/Tubras'
     LibPath = ['libs/release64']
     if gDebug:
         tLibName = 'libs/debug64/Tubras_d'
         LibPath = ['libs/debug64']
+elif gTargetArch == 'nacl':
+    if 'NACL_SDK_ROOT' not in os.environ:
+        print('NACL_SDK_ROOT Undefined')
+        sys.exit(0)
+
+    tLibName = 'libs/nacl/Tubras'
+    LibPath = ['libs/nacl']
+    if gDebug:
+        tLibName = 'libs/nacl/Tubras_d'
+        LibPath = ['libs/nacl']
 
 if gPlatform == 'win32' and gIncludeD3D9 == 1:
     includePath.append(os.environ['DXSDK_DIR'] + '\\include')
@@ -447,11 +461,31 @@ if gPlatform == 'win32' and gIncludeD3D9 == 1:
         LibPath.append(os.environ['DXSDK_DIR'] + '\\lib\\x86')
     else:
         LibPath.append(os.environ['DXSDK_DIR'] + '\\lib\\x64')    
-        
-env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
 
-envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
-envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
+if gTargetArch == 'nacl':
+    nacl_root = os.environ['NACL_SDK_ROOT']
+    import imp
+    import SCons.Tool
+    SCons.Tool.DefaultToolpath.append(os.path.join(nacl_root, 'build_tools', 'nacl_sdk_scons', 'site_tools'))
+
+
+    nacl_utils = imp.load_source('nacl_utils', os.path.join(nacl_root, 'build_tools', 'nacl_sdk_scons', 'nacl_utils.py'))
+    nacl_tools = imp.load_source('nacl_tools', os.path.join(nacl_root, 'build_tools', 'nacl_sdk_scons', 'site_tools', 'nacl_tools.py'))
+
+    make_nacl_env = imp.load_source('make_nacl_env', os.path.join(nacl_root, 'build_tools', 'nacl_sdk_scons', 'make_nacl_env.py'))
+    
+    env = make_nacl_env.NaClEnvironment(use_c_plus_plus_libs=True)
+
+    #env = Environment(CPPPATH = includePath)
+    envProgs = Environment(CPPPATH = includePath)
+    envProgsC = Environment(CPPPATH = includePath)
+    
+    gPlatform = 'nacl'
+
+else:
+    env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
+    envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
+    envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
 
 #
 # setup compiler flags based on platform type
@@ -537,6 +571,8 @@ elif gPlatform == 'posix':
     defines += ' -DNO_IRR_COMPILE_WITH_SOFTWARE_'
     defines += ' -DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_'
     defines += ' -DNO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_'
+    defines += ' -DNO_IRR_COMPILE_WITH_DIRECT3D_8_'
+    defines += ' -DNO_IRR_COMPILE_WITH_DIRECT3D_9_'
     defines += ' -DPNG_THREAD_UNSAFE_OK'
     defines += ' -DPNG_NO_MMX_CODE'
     defines += ' -DPNG_NO_MNG_FEATURES'
@@ -558,12 +594,55 @@ elif gPlatform == 'posix':
         libCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
         progCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
         arFlags = ''
+elif gPlatform == 'nacl':
+    defines = ' -D_IRR_STATIC_LIB_ -DSTATIC_LINKED'
+    if gSound == 1:
+        defines += ' -DUSE_SOUND_IRR'
+    elif gSound == 2:
+        defines += ' -DUSE_SOUND_FMOD'
+    else:
+        defines += ' -DUSE_SOUND_NULL'
 
-env.Append(CCFLAGS = libCCFlags)
+    defines += ' -DNO_IRR_COMPILE_WITH_SOFTWARE_'
+    defines += ' -DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_'
+    defines += ' -DNO_IRR_COMPILE_WITH_DIRECT3D_8_'
+    defines += ' -DNO_IRR_COMPILE_WITH_DIRECT3D_9_'
+    defines += ' -DNO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_'
+    defines += ' -DNO_IRR_COMPILE_WITH_CONSOLE_DEVICE_'
+    defines += ' -DNO_IRR_COMPILE_WITH_OPENGL_'
+    defines += ' -DPNG_THREAD_UNSAFE_OK'
+    defines += ' -DPNG_NO_MMX_CODE'
+    defines += ' -DPNG_NO_MNG_FEATURES'
+    defines += ' -DLUA_USE_MKSTEMP'
+
+    if not gExtras:
+        for define in gExtraNoDefs:
+            defines += ' -D{0}'.format(define)
+
+    if gProfiling:
+        defines = ' -DPROFILING_ENABLED -DBT_NO_PROFILE'
+
+    if gDebug:
+        defines += ' -D_DEBUG'
+        libCCFlags = defines
+        progCCFlags = defines
+        #libCCFlags = '-Wall -pipe -g -fstrict-aliasing -fno-exceptions -fno-rtti' + defines
+        #progCCFlags = '-Wall -pipe -g -fstrict-aliasing -fno-exceptions -fno-rtti' + defines
+        arFlags = ''
+    else:
+        libCCFlags = defines
+        progCCFlags = defines
+        #libCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
+        #progCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
+        arFlags = ''
+
+    env.Append(CPPPATH = includePath)
+
+env.Replace(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
 env.Append(ARFLAGS = arFlags)
 
-envProgs.Append(CCFLAGS = progCCFlags)
+envProgs.Replace(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
 envProgsC.Append(CCFLAGS = progCCFlags) 
 envProgsC.Append(LINKFLAGS = progLNCFlags)

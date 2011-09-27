@@ -15,8 +15,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#if !defined(__native_client__)
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#endif
 
 #endif
 

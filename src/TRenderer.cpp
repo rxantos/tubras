@@ -15,12 +15,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+/*
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/gl.h>
 #define GLX_GLXEXT_LEGACY 1
 #include <GL/glx.h>
 #include "glxext.h"
+*/
 #endif
 
 namespace Tubras

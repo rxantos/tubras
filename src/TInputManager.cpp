@@ -4,11 +4,6 @@
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#ifndef TUBRAS_PLATFORM_WINDOWS
-#ifdef _IRR_COMPILE_WITH_X11_
-#include <X11/Xlib.h>
-#endif
-#endif
 
 namespace Tubras
 {
