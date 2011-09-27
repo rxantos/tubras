@@ -7,7 +7,10 @@
 #define _GETOPT_H_
 
 extern int optind, opterr;
+
+#if !defined(__native_client__)
 extern const char *optarg;
+#endif
 
 int getopt(int argc, const char *argv[], const char *optstring);
 

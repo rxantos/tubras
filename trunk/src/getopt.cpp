@@ -117,6 +117,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#if !defined(__native_client__)
 const char	*optarg;	// global argument pointer
 int		optind = 0; 	// global argv index
 
@@ -182,3 +183,5 @@ int getopt(int argc, const char *argv[], const char *optstring)
 
 	return c;
 }
+#endif
+
