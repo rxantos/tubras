@@ -118,7 +118,30 @@ gExtraNoDefs = ('NO__IRR_COMPILE_WITH_PAK_ARCHIVE_LOADER_',
     'NO_IRR_COMPILE_WITH_B3D_LOADER_',
     'NO_IRR_COMPILE_WITH_SMF_LOADER_',
     )
-    
+
+# fix for nacl-ar on win32 (http://www.scons.org/wiki/LongCmdLinesOnWin32)
+class ourSpawn:
+    def ourspawn(self, sh, escape, cmd, args, env):
+        newargs = ' '.join(args[1:])
+        cmdline = cmd + " " + newargs
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        proc = subprocess.Popen(cmdline, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, startupinfo=startupinfo, shell = False, env = env)
+        data, err = proc.communicate()
+        rv = proc.wait()
+        if rv:
+            print "====="
+            print err
+            print "====="
+        return rv
+
+def SetupSpawn( env ):
+    if sys.platform == 'win32':
+        buf = ourSpawn()
+        buf.ourenv = env
+        env['SPAWN'] = buf.ourspawn
+
 #--------------------------------------------------------------------
 #                      d o w n l o a d D e p
 #--------------------------------------------------------------------
@@ -270,7 +293,8 @@ Help("""
                            0 - build arch (default)
                            1 - x86 
                            2 - x86_64
-                           3 - nacl
+                           3 - nacl_32
+                           4 - nacl_64
 
        docs=?           Enable/Disable documenation generation
                            0 - Disable (default)
@@ -330,8 +354,11 @@ if tarch == 0: # use platform default
         gTargetArch = 'x86_64'
 elif tarch == 2:
     gTargetArch = 'x86_64'
-elif tarch == 3:
+elif (tarch == 3) or (tarch == 4):
     gTargetArch = 'nacl'
+    nacl_bits = '32'
+    if tarch == 4:
+        nacl_bits = '64'
     gIncludeD3D9 = 0
 
 if int(ARGUMENTS.get('profile',0)):
@@ -449,10 +476,10 @@ elif gTargetArch == 'nacl':
         print('NACL_SDK_ROOT Undefined')
         sys.exit(0)
 
-    tLibName = 'libs/nacl/Tubras'
+    tLibName = 'libs/nacl/Tubras{0}'.format(nacl_bits)
     LibPath = ['libs/nacl']
     if gDebug:
-        tLibName = 'libs/nacl/Tubras_d'
+        tLibName = 'libs/nacl/Tubra{0}_d'.format(nacl_bits)
         LibPath = ['libs/nacl']
 
 if gPlatform == 'win32' and gIncludeD3D9 == 1:
@@ -630,13 +657,16 @@ elif gPlatform == 'nacl':
         #progCCFlags = '-Wall -pipe -g -fstrict-aliasing -fno-exceptions -fno-rtti' + defines
         arFlags = ''
     else:
-        libCCFlags = defines
-        progCCFlags = defines
+        libCCFlags = '-pipe -fno-rtti -O2 -m{0}'.format(nacl_bits) + defines
+        progCCFlags = '-pipe -fno-rtti -O2 -m{0}'.format(nacl_bits) + defines
+
         #libCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
         #progCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
         arFlags = ''
 
     env.Append(CPPPATH = includePath)
+
+    SetupSpawn(env)
 
 env.Replace(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
@@ -651,7 +681,7 @@ envProgsC.Append(LINKFLAGS = progLNCFlags)
 # Setup source files.  Non tubras files will be compiled using the Object()
 # builder. The output (.obj) will be used as input along with the Tubras
 # source file for generating the final "Tubras" library.  We separate these
-# compiles in order to take advantage of precompile headers.
+# compiles in order to take advantage of precompiled headers.
 #
 objCppFiles = []
 cppFiles = []
@@ -809,7 +839,7 @@ if gPlatform == 'win32':
 env.Append(TubrasSourceFiles = cppFiles)
 Export('env')
 
-library = env.StaticLibrary(tLibName,cppFiles)
+library = env.StaticLibrary(tLibName, cppFiles)
 Default(library)
 
 # Libraries 
@@ -834,48 +864,49 @@ else:
 #
 # Applications, Tools, & Tests
 # 
-Default(envProgs.Program('bin/sandbox','examples/sandbox/sandbox.cpp',
-        LIBS=Libraries, LIBPATH=LibPath))
+if gPlatform != 'nacl':
 
-Default(envProgs.Program('bin/guidemo','examples/guidemo/guidemo.cpp',
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgs.Program('bin/sandbox','examples/sandbox/sandbox.cpp',
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/tcstest','examples/tcstest/tcstest.cpp',
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgs.Program('bin/guidemo','examples/guidemo/guidemo.cpp',
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/entitytest','examples/entitytest/entitytest.cpp',
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgs.Program('bin/tcstest','examples/tcstest/tcstest.cpp',
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/iwalktest',['tools/iwalktest/iwalktest.cpp',
-        'tools/iwalktest/cmdproc.cpp', 'tools/iwalktest/aboutdlg.cpp'],        
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgs.Program('bin/entitytest','examples/entitytest/entitytest.cpp',
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgs.Program('bin/iwalktest',['tools/iwalktest/iwalktest.cpp',
+            'tools/iwalktest/cmdproc.cpp', 'tools/iwalktest/aboutdlg.cpp'],        
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/tcslint','tools/tcslint/tcslint.cpp',
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgs.Program('bin/tcslint','tools/tcslint/tcslint.cpp',
+            LIBS=Libraries, LIBPATH=LibPath))
+
+    Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
+            LIBS=Libraries, LIBPATH=LibPath))
         
-Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
-        'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
+            'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
-        'tools/irrlicht/extensions/CGUISceneNode' + objExt,
-        'tools/irrlicht/extensions/CApplication.cpp',
-        'tools/irrlicht/extensions/CGUITextPanel.cpp',
-        'tools/irrlicht/extensions/CPhysicsManager.cpp',
-        'tools/irrlicht/extensions/CXMLConfig.cpp'],
-        LIBS=Libraries, LIBPATH=LibPath))
+    Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
+            'tools/irrlicht/extensions/CGUISceneNode' + objExt,
+            'tools/irrlicht/extensions/CApplication.cpp',
+            'tools/irrlicht/extensions/CGUITextPanel.cpp',
+            'tools/irrlicht/extensions/CPhysicsManager.cpp',
+            'tools/irrlicht/extensions/CXMLConfig.cpp'],
+            LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/itiming',['tools/irrlicht/examples/itiming/main.cpp',
-        'tools/irrlicht/examples/itiming/COverlay.cpp',
-        'tools/irrlicht/examples/itiming/CTextOverlay.cpp',
-        'tools/irrlicht/extensions/timing/CAnimator'  + objExt,
-        'tools/irrlicht/extensions/timing/CTimingManager'  + objExt],
-        LIBS=Libraries, LIBPATH=LibPath))
-
+    Default(envProgs.Program('bin/itiming',['tools/irrlicht/examples/itiming/main.cpp',
+            'tools/irrlicht/examples/itiming/COverlay.cpp',
+            'tools/irrlicht/examples/itiming/CTextOverlay.cpp',
+            'tools/irrlicht/extensions/timing/CAnimator'  + objExt,
+            'tools/irrlicht/extensions/timing/CTimingManager'  + objExt],
+            LIBS=Libraries, LIBPATH=LibPath))
 
