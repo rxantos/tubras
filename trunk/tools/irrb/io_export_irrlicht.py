@@ -507,6 +507,37 @@ keybindings =\n\
     ['input.key.down.esc'] = 'quit',\n\
 }}\n\
 "
+# dropped to {out dir}/default.cfg
+gWTConfigGen = "\
+options.debug = {oiDebug},\n\
+options.console = {obConsole},\n\
+options.velocity = {ofVelocity},\n\
+options.angularvelocity = {ofAVelocity},\n\
+options.maxvertangle = 80,\n\
+options.velocitydamp = {ofVelocityDamp},\n\
+options.defcampos = {{0, 5, -50}},\n\
+options.defcamtarget = {{0, 0, 0}},\n\
+options.showHelpGUI = {obShowHelp},\n\
+options.showDebugGUI = {obShowDebug},\n\
+\n\
+video.driver = {osDriver},\n\
+video.resolution = {osResolution},\n\
+video.keepaspect = {obKeepAspect},\n\
+video.colordepth = {oiColorDepth},\n\
+video.fullscreen = {obFullScreen},\n\
+video.vsync = {obVSync},\n\
+video.stencilbuffer = {obStencilBuffer},\n\
+video.antialias = {oiAntiAlias},\n\
+\n\
+physics.library = '{osPhysicsSystem}',\n\
+physics.broadphase = {osBroadphase},\n\
+physics.maxSubSteps = {oiSubSteps},\n\
+physics.fixedTimeStep = {oiTimeStep},\n\
+physics.characterWidth = {ofCharWidth},\n\
+physics.characterHeight = {ofCharHeight},\n\
+physics.characterStepHeight = {ofCharStepHeight},\n\
+physics.characterJumpSpeed = {ofCharJumpSpeed},\n\
+"
 
 #=============================================================================
 #                        g e t G U I I n t e r f a c e
@@ -1202,8 +1233,7 @@ def _updateDefaultConfig(bscene):
         gWTOptions['oiSubSteps'] = bscene.irrb_wt_bullet_substeps
         gWTOptions['oiTimeStep'] = bscene.irrb_wt_bullet_timestep
 
-    return gWTConfig.format(**gWTOptions)
-
+    return (gWTConfig.format(**gWTOptions), gWTConfigGen.format(**gWTOptions))
 
 #=============================================================================
 #                          w r i t e A t t r i b u t e s
@@ -1514,10 +1544,10 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_resx = IntProperty(name='X Res',
-        min=640, default=640, options=emptySet)
+        min=32, max=4096, default=640, options=emptySet)
 
     bpy.types.Scene.irrb_wt_resy = IntProperty(name='Y Res',
-        min=480, default=480, options=emptySet)
+        min=32, max=4096, default=480, options=emptySet)
 
     bpy.types.Scene.irrb_wt_keepaspect = BoolProperty(name='Keep Aspect',
         description='Keep Screen Aspect', default=False,
@@ -4239,6 +4269,13 @@ class iExporter:
             f = open(gWTConfigParm, 'w')
             f.write(self.gCfgString)
             f.close()
+            
+            gWTConfigParmGen = os.path.splitext(self.gSceneFileName)[0] + '.cfg'
+            if os.path.exists(gWTConfigParmGen):
+                os.unlink(gWTConfigParmGen)
+            f = open(gWTConfigParmGen, 'w')
+            f.write(self.gCfgStringGen)
+            f.close()
 
             gWTConfigParm = ' -c "{}"'.format(gWTConfigParm)
 
@@ -5073,7 +5110,7 @@ class iExporter:
 
         # setup walktest/executable config parms
         if self.gRunWalkTest:
-            self.gCfgString = _updateDefaultConfig(self.gBScene)
+            self.gCfgString, self.gCfgStringGen = _updateDefaultConfig(self.gBScene)
 
         if self.gExportPack:
             zipFileName = '{}{}.zip'.format(self.gSceneDir,
