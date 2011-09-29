@@ -6,7 +6,7 @@ Installation
    :maxdepth: 2
 
 The latest stable download of **irrB** is accessible from both the "Project Home" 
-and "Downloads" tabs of the Tubras Google Code project. On the "Project Home" 
+and "Downloads" tabs of the `Tubras Google Code project <http://code.google.com/p/tubras/>`_. On the "Project Home" 
 tab, **irrB** is listed in the "Featured Downloads" section.
 
 The current version may be downloaded from here: http://tubras.googlecode.com/files/irrb-0.6.zip

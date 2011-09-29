@@ -25,7 +25,7 @@ you may also choose to optionally walktest your exported scene.
    and relative sub-directories remain intact.
 
    It is also worth noting that the default "mdl/" and "tex/" sub-directories used
-   for storing mesh and texture files, may be customized in irrB's
+   for storing mesh and texture files, may be customized in **irrB's**
    configuration file.
 
 Depending on the Export option(s) you select, additional options may or may
@@ -123,7 +123,7 @@ OpenGL.
 **Resolution** - Drop down which allows you to choose the video resolution
 to use. Options include "minimal", "medium", "maximum", or "custom".  When
 "custom" is selected, you may then enter the exact horizontal and vertical
-resolutions.
+dimensions.
 
 **Velocity** - The camera movement speed in units pre second.
 
