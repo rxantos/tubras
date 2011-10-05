@@ -117,6 +117,7 @@ gConfig = None
 gWTCmdLine = ''
 gWTDirectory = ''
 gWTConfigParm = ''
+gWTConfigParmGen = ''
 
 iversion = '{}.{}'.format(bl_info['version'][0],
                             bl_info['version'][1])
@@ -509,34 +510,37 @@ keybindings =\n\
 "
 # dropped to {out dir}/default.cfg
 gWTConfigGen = "\
-options.debug = {oiDebug},\n\
-options.console = {obConsole},\n\
-options.velocity = {ofVelocity},\n\
-options.angularvelocity = {ofAVelocity},\n\
-options.maxvertangle = 80,\n\
-options.velocitydamp = {ofVelocityDamp},\n\
-options.defcampos = {{0, 5, -50}},\n\
-options.defcamtarget = {{0, 0, 0}},\n\
-options.showHelpGUI = {obShowHelp},\n\
-options.showDebugGUI = {obShowDebug},\n\
+[options]\n\
+debug = {oiDebug}\n\
+console = {obConsole}\n\
+velocity = {ofVelocity}\n\
+angularvelocity = {ofAVelocity}\n\
+maxvertangle = 80\n\
+velocitydamp = {ofVelocityDamp}\n\
+defcampos = {{0, 5, -50}}\n\
+defcamtarget = {{0, 0, 0}}\n\
+showHelpGUI = {obShowHelp}\n\
+showDebugGUI = {obShowDebug}\n\
 \n\
-video.driver = {osDriver},\n\
-video.resolution = {osResolution},\n\
-video.keepaspect = {obKeepAspect},\n\
-video.colordepth = {oiColorDepth},\n\
-video.fullscreen = {obFullScreen},\n\
-video.vsync = {obVSync},\n\
-video.stencilbuffer = {obStencilBuffer},\n\
-video.antialias = {oiAntiAlias},\n\
+[video]\n\
+driver = {osDriver}\n\
+resolution = {osResolution}\n\
+keepaspect = {obKeepAspect}\n\
+colordepth = {oiColorDepth}\n\
+fullscreen = {obFullScreen}\n\
+vsync = {obVSync}\n\
+stencilbuffer = {obStencilBuffer}\n\
+antialias = {oiAntiAlias}\n\
 \n\
-physics.library = '{osPhysicsSystem}',\n\
-physics.broadphase = {osBroadphase},\n\
-physics.maxSubSteps = {oiSubSteps},\n\
-physics.fixedTimeStep = {oiTimeStep},\n\
-physics.characterWidth = {ofCharWidth},\n\
-physics.characterHeight = {ofCharHeight},\n\
-physics.characterStepHeight = {ofCharStepHeight},\n\
-physics.characterJumpSpeed = {ofCharJumpSpeed},\n\
+[physics]\n\
+library = {osPhysicsSystem}\n\
+broadphase = {osBroadphase}\n\
+maxSubSteps = {oiSubSteps}\n\
+fixedTimeStep = {oiTimeStep}\n\
+characterWidth = {ofCharWidth}\n\
+characterHeight = {ofCharHeight}\n\
+characterStepHeight = {ofCharStepHeight}\n\
+characterJumpSpeed = {ofCharJumpSpeed}\n\
 "
 
 #=============================================================================
@@ -4246,7 +4250,7 @@ class iExporter:
     #                           _ r u n W a l k T e s t
     #=========================================================================
     def _runWalkTest(self, executableName=None):
-        global gWTDirectory, gWTCmdLine, gWTConfigParm
+        global gWTDirectory, gWTCmdLine, gWTConfigParm, gWTConfigParmGen
 
         if executableName:
             gWTDirectory = os.path.dirname(executableName)
@@ -5313,8 +5317,8 @@ class IrrbWalktestOp(bpy.types.Operator):
     def execute(self, context):
         if len(gWTCmdLine) > 0:
             # save updated walktest config settings
-            cfgString = _updateDefaultConfig(context.scene)
-
+            cfgString, cfgStringGen = _updateDefaultConfig(context.scene)
+            
             gWTConfigParm = '{}{}default.cfg'.format(gWTDirectory, os.sep)
             if os.path.exists(gWTConfigParm):
                 os.unlink(gWTConfigParm)
@@ -5322,6 +5326,12 @@ class IrrbWalktestOp(bpy.types.Operator):
             f.write(cfgString)
             f.close()
             gWTConfigParm = ' -c "{}"'.format(gWTConfigParm)
+                        
+            if os.path.exists(gWTConfigParmGen):
+                os.unlink(gWTConfigParmGen)
+            f = open(gWTConfigParmGen, 'w')
+            f.write(cfgStringGen)
+            f.close()            
 
             subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True,
                 cwd=gWTDirectory)
