@@ -2,6 +2,10 @@
 irrB Documentation Contents
 ===========================
 
+.. container:: irrb-right
+
+	.. image:: _static/img014.png 
+   
 .. toctree::
    :maxdepth: 1
 
@@ -26,7 +30,7 @@ irrB Documentation Contents
    notes
    faq
    changelog
-
+   
 Indices and tables
 ==================
 

@@ -1575,7 +1575,7 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Object.irrb_node_type = EnumProperty(name='Scene Node Type',
-        items=(('DEFAULT', 'Default', 'default type'),
+        items=(('DEFAULT', 'Standard Mesh', 'default mesh type'),
         ('BILLBOARD', 'Billboard', 'billboard type'),
         ('SKYBOX', 'Skybox', 'skybox type'),
         ('SKYDOME', 'Skydome', 'skydome type'),
