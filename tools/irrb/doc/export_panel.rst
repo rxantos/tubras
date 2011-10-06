@@ -40,13 +40,20 @@ Basic Export Options
 
 	.. image:: _static/img002.png    
 
-**Export** - The export button initiates the export process.  
+**Export** - The export button initiates the export process. Note that this button 
+conveniently appears on all of the **irrB** custom panels. 
+
+**Out Directory** - The base directory where exported content will be stored. If 
+left blank, irrB will pop up Blender's directory selection dialog.  
 
 **Scene** - Check box used to control whether or not a scene file (".irr") is generated. 
 If checked, an Irrlicht scene file is written to the selected output directory.  The 
-generated scene file name is based on the active Blender scene name: "{out}/{Blender scene name}.irr".  
+generated scene file name is based on the active Blender scene name: 
+
+	"{out}/{Blender scene name}.irr" 
+	 
 Therefore, if the scene being exported is named "TestLevel", the generated scene file 
-would be "{out}/TestLevel.irr".
+would be saved to "{out}/TestLevel.irr".
 
 **Light(s)** - Check box used to indicate whether or not light objects are written 
 to the Irrlicht scene file. 
@@ -60,8 +67,9 @@ will be exported.
 
 **Animations** - not implemented.
 
-**Physics** - Check box used to indicate whether or not to write collision/physics to 
-the Irrlicht scene file. When selected, additional physics related options will appear.
+**Physics** - Check box used to indicate whether or not to write collision/physics 
+data to the Irrlicht scene file. When selected, additional physics related options 
+will appear.
 
 **Pack Files** - Check box used to indicate whether or not **all** generated
 output will packed into a single "{scene name}.zip" file. 
@@ -76,15 +84,15 @@ properly configured.
 **Binary Meshes** - Check box used to indicate whether or not to convert mesh files to 
 the experimental ".irrbmesh" (binary .irrmesh) format. This option will only appear if 
 you have the imeshcvt utility installed and properly configured. For more information 
-on the .irrbmesh format, see the section named "Binary Mesh Format". 
+on the .irrbmesh format, see the section named :doc:`Binary Mesh Format </irrbmesh>`. 
 
 **Walktest** - Check box used to indicate whether or not to walktest your
 exported scene after exporting.  This option will only appear if you have
 the IWALKTEST environment variable defined. When selected, the program
 defined by the IWALKTEST environment variable is executed with your exported
-scene file as parameter immediately after a successful export.  The "irrB
-Utilitiles" contains a program that you may use to examine an exported scene
-using the Irrlicht rendering engine.
+scene file as parameter immediately after a successful export.  The 
+":doc:`irrb Utilities </utilities>`" contain a program that you may use to 
+examine an exported scene using the Irrlicht rendering engine.
 
 Walktest Options
 ================
@@ -125,7 +133,7 @@ to use. Options include "minimal", "medium", "maximum", or "custom".  When
 "custom" is selected, you may then enter the exact horizontal and vertical
 dimensions.
 
-**Velocity** - The camera movement speed in units pre second.
+**Velocity** - The camera movement speed in units per second.
 
 **Angular Velocity** - The camera rotational speed.
 
@@ -166,4 +174,9 @@ character controller.
 
 Notes     
 =====
+
+**Walk Testing**.  When an application has been correctly defined for walk 
+testing, a "Walktest" button will appear below the "Export" button after your 
+initial export.  Clicking on the "Walktest" button will immediately execute the 
+targeted walktest application.
 
