@@ -1629,6 +1629,7 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Object.irrb_node_octree_polys = IntProperty(name='',
+        description='Octree Minimum Poly Count',
         min=32, default=128, options=emptySet)
 
     # Skydome Object Properties
@@ -1751,6 +1752,72 @@ def _registerIrrbProperties():
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
+    
+    # Light Object Properties
+    bpy.types.Object.irrb_light_type = EnumProperty(name='Light Type',
+        items=(('ILT_POINT', 'Point', ''),
+        ('ILT_SPOT', 'Spot', ''),
+        ('ILT_DIRECTIONAL', 'Directional', ''),
+        ),
+        default='ILT_POINT',
+        description='Irrlicht light type',
+        options=emptySet)
+    
+    bpy.types.Object.irrb_light_ambient = FloatVectorProperty(name='Ambient',
+        description='Ambient color',
+        default=(0.0, 0.0, 0.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
+    bpy.types.Object.irrb_light_specular = FloatVectorProperty(name='Specular',
+        description='Specular color',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+    
+    bpy.types.Object.irrb_light_radius = FloatProperty(name='Radius',
+        description='Radius', default=100.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+    
+    bpy.types.Object.irrb_light_attenuation = FloatVectorProperty(
+        name='Attenuation',
+        description='Attenuation',
+        default=(1.0, 0.0, 0.0),
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=1.0, precision=2,
+        options=emptySet, size=3)
+    
+    bpy.types.Object.irrb_light_outercone = FloatProperty(name='OuterCone',
+        description='Outer Cone', default=45.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_light_innercone = FloatProperty(name='InnerCone',
+        description='Inner Cone', default=0.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_light_falloff = FloatProperty(name='FallOff',
+        description='Fall off', default=2.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+    
+    bpy.types.Object.irrb_light_castshadows = BoolProperty(name='CastShadows',
+        description='Cast Shadows', default=True, options=emptySet)
     
     # Material Properties
     bpy.types.Material.irrb_type = EnumProperty(name='Material Type',
@@ -2815,38 +2882,55 @@ class iScene:
         light = bObject.data
 
         lightType = 'Point'
-        if light.type == 'AREA':
-            lightType = 'Directional'
-        elif light.type == 'SPOT':
+        if bObject.irrb_light_type == 'ILT_SPOT':
             lightType = 'Spot'
-        elif light.type == 'SUN':
-            lightType = 'Directional'
-        elif light.type == 'HEMI':
+        elif bObject.irrb_light_type == 'ILT_DIRECTIONAL':
             lightType = 'Directional'
 
         file.write(i2 + '<enum name="LightType" ' \
             'value="{}"/>\n'.format(lightType))
 
-        diffuse = '{}'.format(_formatFloats((light.color[0],
-            light.color[1], light.color[2], 1.0)))
+        color = bObject.irrb_light_ambient
+        tcolor = '{}'.format(_formatFloats((color[0],
+            color[1], color[2], 1.0)))
+        file.write(i2 + '<colorf name="AmbientColor" ' \
+            'value="{}"/>\n'.format(tcolor))
 
-        file.write(i2 + '<colorf name="AmbientColor" value="0,' +
-                '0, 0, 1"/>\n')
+        color = light.color        
+        tcolor = '{}'.format(_formatFloats((color[0],
+            color[1], color[2], 1.0)))
         file.write(i2 + '<colorf name="DiffuseColor" ' \
-            'value="{}"/>\n'.format(diffuse))
-        file.write(i2 + '<colorf name="SpecularColor" value="1,' +
-                '1, 1, 1"/>\n')
+            'value="{}"/>\n'.format(tcolor))
+        
+        color = bObject.irrb_light_specular
+        tcolor = '{}'.format(_formatFloats((color[0],
+            color[1], color[2], 1.0)))
+        file.write(i2 + '<colorf name="SpecularColor" ' \
+            'value="{}"/>\n'.format(tcolor))
 
         attvalue = 0.0
         if light.energy != 0.000000:
             attvalue = 0.5 / light.energy
-        satt = _formatFloats((0, attvalue, 0))
+                        
+        satt = _formatFloats(bObject.irrb_light_attenuation)
         file.write(i2 + '<vector3d name="Attenuation" ' \
             'value="{}"/>\n'.format(satt))
 
         file.write(i2 + '<float name="Radius" value="{:.2f}"/>\n'.format
-                (light.distance * 2.0))
-        file.write(i2 + '<bool name="CastShadows" value="true"/>\n')
+                (bObject.irrb_light_radius))
+        
+        file.write(i2 + '<float name="OuterCone" value="{:.2f}"/>\n'.format
+                (bObject.irrb_light_outercone))
+        
+        file.write(i2 + '<float name="InnerCone" value="{:.2f}"/>\n'.format
+                (bObject.irrb_light_innercone))
+        
+        shadows = 'false'
+        if bObject.irrb_light_castshadows:
+            shadows = 'true'
+        file.write(i2 + '<bool name="CastShadows" value="{}"/>\n'.format
+                   (shadows))
+        
         file.write(i1 + '</attributes>\n')
 
         writeUserData(file, i1, i2, bObject)
@@ -5664,7 +5748,7 @@ class IrrbObjectProps(bpy.types.Panel):
 
         if obj.type in ('MESH', 'EMPTY'):
             row = layout.row()
-            row.label(text='Type')
+            row.label(text='Node Type')
             row.prop(obj, 'irrb_node_type', '')
             row = layout.row()
             
@@ -5681,7 +5765,48 @@ class IrrbObjectProps(bpy.types.Panel):
             row = layout.row()
             row.label(text='Hint Buffer Type')
             row.prop(obj, 'irrb_node_hwhint_bt', '')
+        elif obj.type == 'LAMP':
+            row = layout.row()
+            row.label(text='Light Type')
+            row.prop(obj, 'irrb_light_type', '')
+            row = layout.row()
+                   
+            row.label(text='Ambient')
+            row.prop(obj, 'irrb_light_ambient', '')
+            row = layout.row()
 
+            row.label(text='Diffuse')
+            row.prop(obj.data, 'color', '')
+            row = layout.row()
+
+            row.label(text='Specular')
+            row.prop(obj, 'irrb_light_specular', '')
+            row = layout.row()
+
+            row.label(text='Radius')
+            row.prop(obj, 'irrb_light_radius', '')
+            row = layout.row()
+
+            row.label(text='Outer Cone')
+            row.prop(obj, 'irrb_light_outercone', '')
+            row = layout.row()
+
+            row.label(text='Inner Cone')
+            row.prop(obj, 'irrb_light_innercone', '')
+            row = layout.row()
+
+            row.label(text='Fall Off')
+            row.prop(obj, 'irrb_light_falloff', '')
+            row = layout.row()
+
+            row.label(text='Cast Shadows')
+            row.prop(obj, 'irrb_light_castshadows', '')
+            row = layout.row()
+            
+            row.label(text='Attenuation')
+            row.prop(obj, 'irrb_light_attenuation', '')
+            row = layout.row()
+            
         if obj.type == 'MESH':
             split = layout.split()
             lcol = split.column()
