@@ -1819,6 +1819,43 @@ def _registerIrrbProperties():
     bpy.types.Object.irrb_light_castshadows = BoolProperty(name='CastShadows',
         description='Cast Shadows', default=True, options=emptySet)
     
+    #Camera Object Properties
+    bpy.types.Object.irrb_cam_target = FloatVectorProperty(
+        name='Target',
+        description='Target',
+        default=(0.0, 0.0, 0.0),
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=1.0, precision=2,
+        options=emptySet, size=3)
+    
+    bpy.types.Object.irrb_cam_upvector = FloatVectorProperty(
+        name='Up Vector',
+        description='Up Vector',
+        default=(0.0, 1.0, 0.0),
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=1.0, precision=2,
+        options=emptySet, size=3)
+    
+    bpy.types.Object.irrb_cam_fov = FloatProperty(name='FOV',
+        description='FOV', default=0.85,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+    
+    bpy.types.Object.irrb_cam_aspect = FloatProperty(name='Aspect',
+        description='Aspect', default=1.25,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+    
+    bpy.types.Object.irrb_cam_bindtarget = BoolProperty(name='BindTarget',
+        description='Bind Target', default=False, options=emptySet)    
+    
+    
     # Material Properties
     bpy.types.Material.irrb_type = EnumProperty(name='Material Type',
         items=tuple([(mat[0], mat[1], '') for mat in irrMaterialTypes]),
@@ -2952,27 +2989,21 @@ class iScene:
         # calculate target based on x,z rotation
         #
         camera = bObject.data
-        target = mathutils.Vector()
-        starget = _formatFloats((target.x, target.z, target.y))
+        starget = _formatFloats(bObject.irrb_cam_target)
+        supvector = _formatFloats(bObject.irrb_cam_upvector)
 
         #
         # override fov & aspect with logic properties if defined
         #
         fov = 2 * math.atan(16.0 / camera.lens)
-        aspect = 1.25
+        fov = bObject.irrb_cam_fov
+        aspect = bObject.irrb_cam_aspect
 
-        prop = getProperty('irrb_camera_fov', bObject)
-        if prop != None and type(prop) == float:
-            fov = prop
-
-        prop = getProperty('irrb_camera_aspect', bObject)
-        if prop != None and type(prop) == float:
-            aspect = prop
 
         file.write(i2 + '<vector3d name="Target" ' \
             'value="{}"/>\n'.format(starget))
-        file.write(i2 + '<vector3d name="UpVector" value="0,' +
-                ' 1, 0"/>\n')
+        file.write(i2 + '<vector3d name="UpVector" ' \
+            'value="{}"/>\n'.format(supvector))
         file.write(i2 + '<float name="Fovy" value="{}"/>\n'.format(_formatFloats((fov,))))
         file.write(i2 + '<float name="Aspect" ' \
             'value="{}"/>\n'.format(_formatFloats((aspect,))))
@@ -2980,6 +3011,12 @@ class iScene:
                 (_formatFloats((camera.clip_start,))))
         file.write(i2 + '<float name="ZFar" value="{}"/>\n'.format
                 (_formatFloats((camera.clip_end,))))
+        
+        binding = 'false'
+        if bObject.irrb_cam_bindtarget:
+            binding = 'true'
+        file.write(i2 + '<bool name="Binding" value="{}"/>\n'.format
+                   (binding))
 
         file.write(i1 + '</attributes>\n')
 
@@ -5765,6 +5802,36 @@ class IrrbObjectProps(bpy.types.Panel):
             row = layout.row()
             row.label(text='Hint Buffer Type')
             row.prop(obj, 'irrb_node_hwhint_bt', '')
+        elif obj.type == 'CAMERA':
+            row = layout.row()
+            row.label(text='Target')
+            row.prop(obj, 'irrb_cam_target', '')
+            row = layout.row()
+            
+            row.label(text='Up Vector')
+            row.prop(obj, 'irrb_cam_upvector', '')
+            row = layout.row()
+            
+            row.label(text='FOV')
+            row.prop(obj, 'irrb_cam_fov', '')
+            row = layout.row()
+            
+            row.label(text='Aspect')
+            row.prop(obj, 'irrb_cam_aspect', '')
+            row = layout.row()
+            
+            row.label(text='ZNear')
+            row.prop(obj.data, 'clip_start', '')
+            row = layout.row()
+            
+            row.label(text='ZFax')
+            row.prop(obj.data, 'clip_end', '')
+            row = layout.row()
+                        
+            row.label(text='Bind Target')
+            row.prop(obj, 'irrb_cam_bindtarget', '')
+            row = layout.row()
+            
         elif obj.type == 'LAMP':
             row = layout.row()
             row.label(text='Light Type')
