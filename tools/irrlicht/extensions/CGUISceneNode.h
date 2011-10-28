@@ -603,7 +603,8 @@ namespace irr
             occured. This pointer should not be dropped. See
             IReferenceCounted::drop() for more information. */
             virtual gui::IGUIFileOpenDialog* addFileOpenDialog(const wchar_t* title = 0,
-                bool modal=true, gui::IGUIElement* parent=0, s32 id=-1) {
+                bool modal=true, gui::IGUIElement* parent=0, s32 id=-1,
+				bool restoreCWD=false, io::path::char_type* startDir=0) {
                     parent = parent ? parent : this;
 
                     if (modal)
@@ -612,7 +613,8 @@ namespace irr
                         parent->drop();
                     }
 
-                    gui::IGUIFileOpenDialog* d = new gui::CGUIFileOpenDialog(title, this, parent, id);
+                    gui::IGUIFileOpenDialog* d = new gui::CGUIFileOpenDialog(title, this, parent, id,
+						restoreCWD, startDir);
 
                     d->drop();
                     return d;
