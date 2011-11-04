@@ -11,7 +11,7 @@ bl_info = {
     'description': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
-    'blender': (2, 5, 7),
+    'blender': (2, 6, 0),
     'api': 39685,
     'location': 'File > Import-Export',
     'warning': '',
