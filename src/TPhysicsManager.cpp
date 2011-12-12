@@ -176,6 +176,12 @@ namespace Tubras
             TVector3 radius(width, height, width);
             m_irrCollision->setEllipsoidRadius(radius);
         }
+        else
+        {
+            TKinematicCharacter* character = m_characterController->getCharacter();
+            character->setJumpSpeed(jumpSpeed * 10);
+            character->setSize(width, height);
+        }
     }
 
     //-----------------------------------------------------------------------

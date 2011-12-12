@@ -582,6 +582,13 @@ namespace Tubras
         m_maxJumpHeight = maxJumpHeight;
     }
 
+    void TKinematicCharacter::setSize(btScalar width, btScalar height)
+    {
+        btCapsuleShape* characterShape = new btCapsuleShape(width, height);
+        m_ghostObject->setCollisionShape(characterShape);
+        m_convexShape = characterShape;	
+    }
+
     bool TKinematicCharacter::canJump () const
     {
         return onGround();

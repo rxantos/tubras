@@ -32,9 +32,10 @@ to affect lighting/shadows for baking light maps.
 Depending on the currently selected object and it's selected **Type**,
 varying options will appear in the object panel.
 
-For example, if the currently selected Blender object is a mesh and the Type
-is left to **default**, "Automatic Culling", "Hardware Hint/Type", and
-"Octree Node" options will appear in the object panel.
+For example, if the currently selected Blender object is a mesh, you can choose 
+from any of the following Irrlicht mesh types: standard, custom, water surface,
+volumetric light, skydome, skybox, or billboard.  Based on the Irrlicht node type
+selected, related Irrlicht options will also appear.  
 
 Note that **All** objects exported to a scene have a corresponding **ID**.  An ID
 is an integer value the defaults to -1 and may be used by your program to
@@ -57,7 +58,7 @@ application. For example, "spawn points":
 * Add a Blender "empty" object to a scene.
 * Add a custom boolean object property to the empty object named "spawn" 
   and set it to "True".
-* Your application code could then include code that looked for scene nodes
+* Your application code could then include code that looks for scene nodes
   with an attribute named "spawn" that was set to "True" and act
   accordingly.
 
@@ -73,13 +74,50 @@ locate a specific scene node or group of scene nodes.
 Mesh Object Options
 ===================
 
-**Automatic Culling** - 
+Common Options:
+	**Node Type** - This field is used to indicate the Irrlicht mesh node type. 
+	Valid options include standard, custom, water surface, volumetric light, 
+	skydome, skybox, or billboard.  See below options specific to each node
+	type.
+	
+	**Automatic Culling** - Enables or disables scene node automatic culling 
+	based on the selected type.
 
-**Hardware Hint** - 
+	**Hardware Hint** - Hardware mapping hint used to indicate what, if any mesh 
+	data should be stored on the hardware.
+	
+		* Never - Don't store on the hardware.
+		* Static - Rarely changed, usually stored completely on the hardware.
+		* Dynamic - Sometimes changed, driver optimized placement.
+		* Stream - Always changed, cache optimizing on the GPU.
+ 	
+	**Hint Buffer Type** - Hint on what data should be stored on the hardware.
+		* None - No data.
+		* Vertex - Vertex data.
+		* Index - Index data.
+		* Vertex & Index - Both Vertex and Index data.
 
-**Hint Buffer Type** - 
+	**Octree Node** - Enables or disables rendering the mesh as an Octree scene 
+	scene node. This a good method for rendering scenes with lots of geometry.  
+	The Octree is built on the fly from the mesh, much faster then a bsp tree. 
+	When selected, the option "Octree Min Polycount" will appear.  
+	Use this field to specify the minimum number of triangles per Octree node.
+	
+Node Type Options:
 
-**Octree Node** - 
+**Standard**
+
+**Billboard**
+
+**Skybox**
+
+**Skydome**
+
+**Volumetric Light**
+
+**Water Surface**
+
+**Custom**
 
 Light Object Options
 ====================

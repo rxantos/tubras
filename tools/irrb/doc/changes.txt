@@ -32,7 +32,7 @@ the user defined scripts directory.
 Added interface to set Irrlicht specific material settings per assigned
 Blender material. 
 
-Updated to work with Blender 2.5+
+Updated to work with Blender 2.6+
 --- version 0.5 (xx/xx/2010) ---
 bug fix - Fixed binary mesh creation when Output Directory contained spaces
 - Added doubled quotes to imeshcvt file & directory parameters.

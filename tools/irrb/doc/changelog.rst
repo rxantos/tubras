@@ -2,7 +2,7 @@
 irrB Change Log
 ===============
 
-0.6 (xx/xx/2010)
+0.6 (xx/xx/2011)
 ================
 
 Added ability to export mesh node as Octree node.

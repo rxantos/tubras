@@ -862,6 +862,8 @@ def _formatFloats(ftuple, prefix=', '):
         sfloat = '{:.6f}'.format(f).rstrip('0')
         l, r = sfloat.split('.')
         if len(r) == 0:
+            if l == '-0':
+                l = '0'
             sfloat = l
            
         res += pre + sfloat
