@@ -115,6 +115,8 @@ namespace Tubras
         void setFallSpeed (btScalar fallSpeed);
         void setJumpSpeed (btScalar jumpSpeed);
         void setMaxJumpHeight (btScalar maxJumpHeight);
+        void setSize(btScalar width, btScalar height);
+
         bool canJump () const;
 
         void jump ();

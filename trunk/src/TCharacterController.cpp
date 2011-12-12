@@ -79,7 +79,7 @@ namespace Tubras
         
         // bullet character controller setup
         m_ghostObject= new btPairCachingGhostObject();
-        btCapsuleShape* characterShape = new btCapsuleShape(m_characterWidth,m_characterHeight);
+        btCapsuleShape* characterShape = new btCapsuleShape(m_characterWidth, m_characterHeight);
         btTransform trans;
         trans.setIdentity();
         TVector3 pos = m_camera->getAbsolutePosition();

@@ -7,9 +7,6 @@ Getting Started
 .. toctree::
    :maxdepth: 2
 
-Key Points
-==========
-
 * Blender Objects are written as Irrlicht scene nodes to an Irrlicht scene file (.irr). 
 * Blender Mesh Objects have their Mesh *Data*  written to mesh files (.irrmesh). 
 * Multiple Blender Mesh Objects may link to the same Mesh Data. In this case 

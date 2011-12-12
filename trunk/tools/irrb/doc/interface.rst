@@ -6,7 +6,7 @@ Interface Overview
    :maxdepth: 2
 
 The **irrB** interface includes three Blender addon property panels.
-These panels enable you the user to control Irrlicht specific properties 
+These panels allow you to control Irrlicht specific properties 
 when exporting scene objects and materials.
 
 .. note::
@@ -33,7 +33,7 @@ dependent properties.
 :doc:`Material Panel </material_panel>`
 
 The **material** property panel is located in Blender's **Material** properties panel group.
-This panel allows you to set every Irrlicht SMaterial property from within
+This panel allows you to set every Irrlicht `SMaterial <http://irrlicht.sourceforge.net/docu/classirr_1_1video_1_1_s_material.html>`_ property from within
 Blender.  
 
 
