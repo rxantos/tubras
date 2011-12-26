@@ -20,7 +20,7 @@ Irrlicht scene node types such as Billboard, Volumetric Light, and Water
 Surface nodes will need to be explicitly set in the **Type** field of the
 object panel because Blender doesn't have a corresponding object type.
 What's more is if your application contains a custom scene node type, **irrB**
-allows you set a custom scene node type.
+allows you set a custom scene node type as well.
 
 The object panel also contains an easy to use field for explicitly
 controlling whether or not an object is exported by **irrB**.  By default all
@@ -75,7 +75,7 @@ Mesh Object Options
 ===================
 
 Common Options:
-	**Node Type** - This field is used to indicate the Irrlicht mesh node type. 
+	**Node Type** - This field is used to specify the Irrlicht mesh node type. 
 	Valid options include standard, custom, water surface, volumetric light, 
 	skydome, skybox, or billboard.  See below options specific to each node
 	type.

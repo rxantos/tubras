@@ -44,7 +44,7 @@ Basic Export Options
 conveniently appears on all of the **irrB** custom panels. 
 
 **Out Directory** - The base directory where exported content will be stored. If 
-left blank, **irrB** will pop up Blender's directory selection dialog.  
+left blank, **irrB** will display Blender's directory selection dialog.  
 
 **Scene** - Check box used to control whether or not a scene file (".irr") is generated. 
 If checked, an Irrlicht scene file is written to the selected output directory.  The 
@@ -72,7 +72,7 @@ data to the Irrlicht scene file. When selected, additional physics related optio
 will appear.
 
 **Pack Files** - Check box used to indicate whether or not **all** generated
-output will packed into a single "{scene name}.zip" file. 
+output will be packed into a single "{scene name}.zip" file. 
 
 **Make Executable** - Check box used to indicate whether or not to
 create an executable containing all of the scene, mesh, and texture
@@ -113,7 +113,7 @@ application set's antialiasing to 4 when creating the video driver.
 screen mode.
 
 **Keep Aspect** - Check box used to indicate whether or not the created
-window will maintain the oritinal aspect of the monitor.
+window will maintain the original aspect of the monitor.
 
 **Show Help** - Check box used to indicate whether or not iwalktest will
 display the help window on start up.

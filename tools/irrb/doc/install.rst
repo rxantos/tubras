@@ -35,14 +35,14 @@ and install it as a Blender **addon**.
 
 If you would like **irrB** to be automatically activated every time you start Blender, 
 then click the **Save As Default** button located at the bottom of the dialog. 
-If you don't click **Save As Default**, you will need activate the **irrB** add-on each 
-time you start up Blender. 
+If you don't click **Save As Default**, you will to need activate the **irrB** add-on
+each time you start up Blender. 
 
 Documentation on installing and configuring "iwalktest" for both Windows and Linux 
-may be found here in :doc:`irrB Utilities </utilities>`.
+may be found in the section named :doc:`irrB Utilities </utilities>`.
 
 Requirements
 ============
 
-* Blender - Supported Blender Versions are 2.59+
+* Blender - Supported Blender Versions are 2.61+
 * Python - **irrB** uses Blender's internal version of Python 3.x so you are not required to install Python.
