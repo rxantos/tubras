@@ -11,7 +11,7 @@ Getting Started
 * Blender Mesh Objects have their Mesh *Data*  written to mesh files (.irrmesh). 
 * Multiple Blender Mesh Objects may link to the same Mesh Data. In this case 
   only a single .irrmesh file will be generated and multiple Mesh nodes will be 
-  written to the scene file. 
+  written to the Irrlicht scene file. 
 
 Before you start using **irrB** you should at the very least have a
 fundamental understanding of how to use Blender.
