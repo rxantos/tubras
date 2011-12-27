@@ -103,21 +103,64 @@ Common Options:
 	When selected, the option "Octree Min Polycount" will appear.  
 	Use this field to specify the minimum number of triangles per Octree node.
 	
-Node Type Options:
+Mesh Node Type Options:
 
 **Standard**
+	Uses common options only.
 
 **Billboard**
+	**Shade Top** - The top color of the billboard.
+	
+	**Shade Bottom** - The bottom color of the billboard.
+	
+	**Top Width** - The width of the top edge of the billboard.
+	
+	**Bottom Width** - The width of the bottom edge of the billboard.
+	
+	**Height** - The height of the billboard.
 
 **Skybox**
+	Uses common options only.
 
 **Skydome**
+	**Horz Res** - Number of faces along the horizontal axis.
+	
+	**Vert Res** - Number of faces along the vertical axis.
+	
+	**Tex Pct** - The percentage of the image to use, e.g. 0.8 uses 
+	the top 80% of the image, 1.0 uses the entire image.
+	
+	**Sphere Pct** - The percentage of the sphere to generate.  A value 
+	of 1.0 generates exactly the upper hemisphere. 1.1 will generate slightly 
+	more, and 2.0 will generate a full sphere. It is sometimes useful to use 
+	a value slightly bigger than 1 to avoid a gap between some ground place and the sky. 
+	
+	**Radius** - The size of the sphere in "units".
 
 **Volumetric Light**
+	**Distance** - Distance to hypothetical light source point - affects FOV angle.
+	
+	**U Subdivide** - Number of subdivisions in the U space. Controls the number of
+	"slices" in the volume: Total number of polygons = 2 + ((U Subdivide + 1) + (V Subdivide +1)) * 2.
+	Each slice is a quad plus the rectangular plane at the bottom.
+	
+	**V Subdivide** - Number of subdvisions in the V space.
+	
+	**Foot Color** - Color at the source.
+	
+	**Tail Color** - Color at the end.
+	
+	**Dimension** - X & Z determine the size/dimension of the plane.  Y is the lenght of the beams.
 
 **Water Surface**
+	**Wave Length** - The length of the wave.
+	
+	**Wave Speed** - The speed of the wave.
+	
+	**Wave Height** - The height of the wave.
 
 **Custom**
+	**Custom node type** - The name of the custom node.
 
 Light Object Options
 ====================

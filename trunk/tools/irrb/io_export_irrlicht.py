@@ -1685,7 +1685,7 @@ def _registerIrrbProperties():
 
     # Volumetric Light Properties
     bpy.types.Object.irrb_volight_distance = FloatProperty(name='Distance',
-        description='Wave Height', default=8.0,
+        description='Distance', default=8.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
@@ -1741,8 +1741,15 @@ def _registerIrrbProperties():
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
     
+    bpy.types.Object.irrb_billboard_width_top = FloatProperty(name='TopWidth',
+        description='Top Width', default=1.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
     bpy.types.Object.irrb_billboard_width = FloatProperty(name='Width',
-        description='Width', default=1.0,
+        description='Bottom Width', default=1.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
@@ -2212,12 +2219,7 @@ class iMaterial:
 
         # set texture image data if exists
         if face:
-            layerNumber = 1
-            for layerNumber in range(len(self.bmesh.uv_textures)):
-                uvFaceData =\
-                    self.bmesh.uv_textures[layerNumber].data[face.index]
-                if uvFaceData.image != None:
-                    self.setTexture(uvFaceData.image, layerNumber + 1)
+            self.setTextures(face)
 
         if self.attributes['Type'].lower() == 'trans_alphach':
             self.attributes['MaterialTypeParam'] = 0.000001
@@ -2417,19 +2419,34 @@ class iMaterial:
         file.write(i1 + '</{}>\n'.format(header))
 
     #=========================================================================
-    #                           s e t T e x t u r e
+    #                           s e t T e x t u r e s
     #=========================================================================
-    def setTexture(self, bImage, layerNumber):
-        self.bimages.append(bImage)
-
-        try:
-            texFile = self.exporter.getImageFileName(bImage, 0)
-        except:
-            texFile = '** error accessing {} **'.format(bImage.name)
-
-        layerName = 'Layer{}'.format(layerNumber)
-        self.attributes[layerName]['Texture'] = texFile
-
+    def setTextures(self, face):
+        
+        # count images assigned to uv layers
+        uvImageCount = 0
+        for layerNumber in range(len(self.bmesh.uv_textures)):
+            uvFaceData = \
+                self.bmesh.uv_textures[layerNumber].data[face.index]
+            if uvFaceData.image != None:
+                uvImageCount += 1
+        
+        if uvImageCount > 0:
+            for layerNumber in range(len(self.bmesh.uv_textures)):
+                uvFaceData =\
+                    self.bmesh.uv_textures[layerNumber].data[face.index]
+                if uvFaceData.image != None:
+                    self.bimages.append(uvFaceData.image)
+                    try:
+                        texFile = self.exporter.getImageFileName(uvFaceData.image, 0)
+                    except:
+                        texFile = '** error accessing {} **'.format(uvFaceData.image.name)
+                    layerName = 'Layer{}'.format(layerNumber + 1)
+                    self.attributes[layerName]['Texture'] = texFile
+            return
+        
+        # no uv images so look for images in texture slots
+        
 #=============================================================================
 #                                i S c e n e
 #=============================================================================
@@ -3256,6 +3273,8 @@ class iScene:
         dz = (ur.z - lr.z) * scale[2]
         height = math.fabs(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)))
 
+        file.write(i2 + '<int name="TopEdgeWidth" ' \
+            'value="{:.6f}" />\n'.format(bObject.irrb_billboard_width_top))
         file.write(i2 + '<int name="Width" ' \
             'value="{:.6f}" />\n'.format(bObject.irrb_billboard_width))
         file.write(i2 + '<int name="Height" ' \
@@ -3456,6 +3475,51 @@ class iMesh:
         return names
 
     #=========================================================================
+    #                    _ g e t M a t e r i a l I n f o
+    #=========================================================================
+    def _getMaterialInfo(self, face):
+        hasMaterials = len(self.bMesh.materials) > 0
+        bMaterial = None
+        matName = 'unassigned'
+        if hasMaterials:
+            bMaterial = self.bMesh.materials[face.material_index]
+            if bMaterial:
+                matName = bMaterial.name
+                
+        # count images assigned to uv layers
+        uvImageCount = 0
+        for layerNumber in range(len(self.bMesh.uv_textures)):
+            uvFaceData = \
+                self.bMesh.uv_textures[layerNumber].data[face.index]
+            if uvFaceData.image != None:
+                uvImageCount += 1
+        
+
+        # uv images take precedence over Blender material texture slots
+        if (uvImageCount > 0) or (bMaterial == None):
+            for layerNumber in range(len(self.bMesh.uv_textures)):
+                uvFaceData = \
+                    self.bMesh.uv_textures[layerNumber].data[face.index]
+                if uvFaceData.image == None:
+                    matName += ':0'
+                else:
+                    matName += ':{}'.format(uvFaceData.image.name)
+                                    
+            return (matName, bMaterial)
+        
+        # no images assigned to uv layers so examing material texture slots         
+        tslots = [bMaterial.texture_slots[i] for i in range(len(bMaterial.texture_slots)) \
+                  if bMaterial.texture_slots[i]]
+        
+        for tslot in tslots:
+            tex = tslot.texture
+            if (tex.type == 'IMAGE') and (tslot.texture_coords == 'UV') and \
+               (tslot.uv_layer != '') and (tex.image != None):
+                matName += ':{}'.format(tex.name)
+               
+        return (matName, bMaterial)
+
+    #=========================================================================
     #                    c r e a t e M e s h B u f f e r s
     #=========================================================================
     def createMeshBuffers(self):
@@ -3468,7 +3532,6 @@ class iMesh:
         #
         result = True
         faces = self.bMesh.faces
-        hasMaterials = len(self.bMesh.materials) > 0
 
         fcount = 0
         tfaces = len(faces)
@@ -3491,22 +3554,8 @@ class iMesh:
             # uv texture image data.  This allows for faces to be assigned
             # unique images within uv layers.
             #
-            bMaterial = None
-            matName = 'unassigned'
-            if hasMaterials:
-                bMaterial = self.bMesh.materials[face.material_index]
-                if bMaterial:
-                    matName = bMaterial.name
-
-            # now append uv image info
-            for layerNumber in range(len(self.bMesh.uv_textures)):
-                uvFaceData = \
-                    self.bMesh.uv_textures[layerNumber].data[face.index]
-                if uvFaceData.image == None:
-                    matName += ':0'
-                else:
-                    matName += ':{}'.format(uvFaceData.image.name)
-
+            matName, bMaterial = self._getMaterialInfo(face)
+            
             # check if we have already created a meshbuffer for this material
             if matName in self.materials:
                 meshBuffer = self.materials[matName]
@@ -5826,7 +5875,7 @@ class IrrbObjectProps(bpy.types.Panel):
             row.prop(obj.data, 'clip_start', '')
             row = layout.row()
             
-            row.label(text='ZFax')
+            row.label(text='ZFar')
             row.prop(obj.data, 'clip_end', '')
             row = layout.row()
                         
@@ -5922,22 +5971,24 @@ class IrrbObjectProps(bpy.types.Panel):
                 row = layout.row()
                 row.prop(obj, 'irrb_volight_subv')
                 row = layout.row()
-                row.prop(obj, 'irrb_volight_footcol')
+                row.prop(obj, 'irrb_volight_footcol', 'Foot Color')
                 row = layout.row()
-                row.prop(obj, 'irrb_volight_tailcol')
+                row.prop(obj, 'irrb_volight_tailcol' 'Tail Color')
                 row = layout.row()
                 row.prop(obj, 'irrb_volight_dimension')
             elif itype == NT_BILLBOARD:
                 row = layout.row()
                 row.label('Billboard Options:')
                 row = layout.row()
-                row.prop(obj, 'irrb_billboard_shade_top')
+                row.prop(obj, 'irrb_billboard_shade_top', 'Shade Top')
                 row = layout.row()
-                row.prop(obj, 'irrb_billboard_shade_bot')
+                row.prop(obj, 'irrb_billboard_shade_bot', 'Shade Bottom')
                 row = layout.row()
-                row.prop(obj, 'irrb_billboard_width')
+                row.prop(obj, 'irrb_billboard_width_top', 'Top Width')
                 row = layout.row()
-                row.prop(obj, 'irrb_billboard_height')
+                row.prop(obj, 'irrb_billboard_width', 'Bottom Width')
+                row = layout.row()
+                row.prop(obj, 'irrb_billboard_height', 'Height')
 
 if __name__ == '__main__':
     register()
