@@ -2468,6 +2468,9 @@ class iMaterial:
             return        
         
         # no uv images so look for images in texture slots
+        if self.bmaterial == None:
+            return
+        
         bMaterial = self.bmaterial
         
         tslots = [bMaterial.texture_slots[i] for i in range(len(bMaterial.texture_slots)) \
