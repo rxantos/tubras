@@ -2223,7 +2223,29 @@ class iMaterial:
 
         if self.attributes['Type'].lower() == 'trans_alphach':
             self.attributes['MaterialTypeParam'] = 0.000001
-
+            
+    #=========================================================================
+    #                   _ w r i t e D e b u g I n f o
+    #=========================================================================
+    def _writeDebugInfo(self):
+        if self.bmaterial == None:
+            debug('   bmaterial: None')
+            return
+        
+        bMaterial = self.bmaterial
+        
+        tslots = [bMaterial.texture_slots[i] for i in range(len(bMaterial.texture_slots)) \
+                  if bMaterial.texture_slots[i]]
+        debug('     tslots: {}'.format(len(tslots)))
+        
+        for tslot in tslots:
+            tex = tslot.texture
+            if (tex.type == 'IMAGE') and (tslot.texture_coords == 'UV') and \
+               (tslot.uv_layer != '') and (tex.image != None):
+                debug('       {}:{}:{}'.format(tex.name, tex.image.name, tslot.uv_layer))
+            else:
+                debug('       {}:{}'.format(tex.type, tslot.texture_coords))
+        
     #=========================================================================
     #                              _ i w r i t e
     #=========================================================================
@@ -2426,10 +2448,10 @@ class iMaterial:
         # count images assigned to uv layers
         uvImageCount = 0
         for layerNumber in range(len(self.bmesh.uv_textures)):
-            uvFaceData = \
-                self.bmesh.uv_textures[layerNumber].data[face.index]
-            if uvFaceData.image != None:
-                uvImageCount += 1
+            for uvFaceData in self.bmesh.uv_textures[layerNumber].data:
+                if uvFaceData.image != None:
+                    uvImageCount += 1
+                    break
         
         if uvImageCount > 0:
             for layerNumber in range(len(self.bmesh.uv_textures)):
@@ -2443,9 +2465,30 @@ class iMaterial:
                         texFile = '** error accessing {} **'.format(uvFaceData.image.name)
                     layerName = 'Layer{}'.format(layerNumber + 1)
                     self.attributes[layerName]['Texture'] = texFile
-            return
+            return        
         
         # no uv images so look for images in texture slots
+        bMaterial = self.bmaterial
+        
+        tslots = [bMaterial.texture_slots[i] for i in range(len(bMaterial.texture_slots)) \
+                  if bMaterial.texture_slots[i]]
+
+        icount = 0
+        for i in range(len(tslots)):
+            tslot = tslots[i]
+            tex = tslot.texture
+            if (tex.type == 'IMAGE') and (tslot.texture_coords == 'UV') and \
+               (tslot.uv_layer != '') and (tex.image != None):
+                self.bimages.append(tex.image)
+                layerName = 'Layer{}'.format(layerNumber + 1)
+                try:
+                    texFile = self.exporter.getImageFileName(tex.image, 0)
+                except:
+                    texFile = '** error accessing {} **'.format(tex.image.name)
+                self.attributes[layerName]['Texture'] = texFile
+                icount += 1
+                if icount >= 5:
+                    break;
         
 #=============================================================================
 #                                i S c e n e
@@ -3357,10 +3400,20 @@ class iMesh:
             lnames += uv.name
         debug('UV Layers ({}): {}'.format(len(self.bMesh.uv_textures),
                 lnames))
-        mname = 'None'
-        if self.uvMatName != None:
-            mname = self.uvMatName
-        debug('Primary UV Layer: ' + mname)
+        
+        for uvtex in self.bMesh.uv_textures:            
+            debug('UV Layer: {}'.format(uvtex.name))
+            inames = []
+            for fidx in range(len(uvtex.data)):
+                uvFaceData = uvtex.data[fidx]
+                if uvFaceData.image != None:
+                    iname = uvFaceData.image.name
+                    if not iname in inames:
+                        debug('   image: {}'.format(iname))
+                        inames.append(iname)
+            if len(inames) == 0:
+                debug('   image: None')
+        
         val = 'False'
         if self.bMesh.show_double_sided:
             val = 'True'
@@ -3489,11 +3542,11 @@ class iMesh:
         # count images assigned to uv layers
         uvImageCount = 0
         for layerNumber in range(len(self.bMesh.uv_textures)):
-            uvFaceData = \
-                self.bMesh.uv_textures[layerNumber].data[face.index]
-            if uvFaceData.image != None:
-                uvImageCount += 1
-        
+            for fidx in range(len(self.bMesh.uv_textures[layerNumber].data)):                
+                uvFaceData = \
+                    self.bMesh.uv_textures[layerNumber].data[fidx]
+                if uvFaceData.image != None:
+                    uvImageCount += 1
 
         # uv images take precedence over Blender material texture slots
         if (uvImageCount > 0) or (bMaterial == None):
@@ -3515,7 +3568,7 @@ class iMesh:
             tex = tslot.texture
             if (tex.type == 'IMAGE') and (tslot.texture_coords == 'UV') and \
                (tslot.uv_layer != '') and (tex.image != None):
-                matName += ':{}'.format(tex.name)
+                matName += ':{}:{}'.format(tex.name, tex.image.name)
                
         return (matName, bMaterial)
 
@@ -3580,8 +3633,8 @@ class iMesh:
         if self.debug:
             debug('\n[Buffers]')
             debug('Count: {}'.format(len(self.materials)))
-            for k, v in self.materials.items():
-                debug('   ' + k + ' : ' + v.getMaterialType())
+            for k, mbuffer in self.materials.items():
+                mbuffer._writeDebugInfo()
 
         return result
 
@@ -3676,6 +3729,13 @@ class iMeshBuffer:
 
         self.relMeshDir = os.path.relpath(self.exporter.gMeshDir,
             self.exporter.gBaseDir) + '/'
+
+    #=========================================================================
+    #                      _ w r i t e D e b u g I n f o
+    #=========================================================================
+    def _writeDebugInfo(self):
+        debug('  uvMatName: {}'.format(self.uvMatName))
+        self.material._writeDebugInfo()
 
     #=========================================================================
     #                        _ w r i t e V e r t e x
@@ -5905,17 +5965,18 @@ class IrrbObjectProps(bpy.types.Panel):
             row.prop(obj, 'irrb_light_radius', '')
             row = layout.row()
 
-            row.label(text='Outer Cone')
-            row.prop(obj, 'irrb_light_outercone', '')
-            row = layout.row()
-
-            row.label(text='Inner Cone')
-            row.prop(obj, 'irrb_light_innercone', '')
-            row = layout.row()
-
-            row.label(text='Fall Off')
-            row.prop(obj, 'irrb_light_falloff', '')
-            row = layout.row()
+            if obj.irrb_light_type == 'ILT_SPOT':
+                row.label(text='Outer Cone')
+                row.prop(obj, 'irrb_light_outercone', '')
+                row = layout.row()
+    
+                row.label(text='Inner Cone')
+                row.prop(obj, 'irrb_light_innercone', '')
+                row = layout.row()
+    
+                row.label(text='Fall Off')
+                row.prop(obj, 'irrb_light_falloff', '')
+                row = layout.row()
 
             row.label(text='Cast Shadows')
             row.prop(obj, 'irrb_light_castshadows', '')
