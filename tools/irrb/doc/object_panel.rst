@@ -71,6 +71,8 @@ exported.
 **ID** - An arbitrary integer that may be used by your application to
 locate a specific scene node or group of scene nodes.
 
+----
+
 Mesh Object Options
 ===================
 
@@ -162,10 +164,55 @@ Mesh Node Type Options:
 **Custom**
 	**Custom node type** - The name of the custom node.
 
+----
+
 Light Object Options
 ====================
+
+**Light Type**
+	**Point** - A point light has a position in space and radiates light in all directions.
+	
+	**Spot** - A spot light has a position in space, direction, and a limited cone of influence.
+	
+	**Directional** - A directional light has a direction and an infinite distance.
+
+**Ambient** - Ambient color emitted by the light
+
+**Diffuse** - Diffuse color emitted by the light. This is the primary color you want to set. This property
+references Blender's Light Diffuse property, so changing one changes the other.
+
+**Specular** - Specular color emitted by the light.
+
+**Radius** - Radius of light. Everything within this radius will be lit.
+
+**Outer Cone** - The angle of the spot light's outer cone. Ignored for other lights.
+
+**Inner Cone** - The angle of the spot light's inner cone. Ignored for other lights.
+
+**Fall Off** - The light strength's decrease between Outer and Inner cone.
+
+**Cast Shadows** - Indicates whether or not the light casts shadows.
+
+**Attenuation** - Attenuation factors (constant, linear, quadratic). Changes the 
+light strength fading over distance. Can also be altered by setting the radius, 
+Attenuation will change to (0,1.f/radius,0). Can be overridden after radius was set. 
+
+----
 
 Camera Object Options
 =====================
 
+**Target** - The camera target (look at) position.
+
+**Up Vector** - Up vector.
+
+**FOV** - Field of view. 
+
+**Aspect** - Aspect ratio.
+
+**ZNear** - Near plane distance.
+
+**ZFar** - Far plane distance. 
+
+**Bind Target** - Bind the camera rotation to its target vector.
 
