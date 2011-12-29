@@ -2013,6 +2013,9 @@ def _registerIrrbProperties():
         step=3, precision=2,
         options=emptySet)
 
+    bpy.types.Material.irrb_use_blender_textures = BoolProperty(name='Use Blender Textures',
+        description='Use images from Blender texture layers', default=False, options=emptySet)
+
     wrap_options = (('ETC_REPEAT', 'Repeat', ''),
         ('ETC_CLAMP', 'Clamp', ''),
         ('ETC_CLAMP_TO_EDGE', 'Clamp To Edge', ''),
@@ -2445,6 +2448,30 @@ class iMaterial:
     #=========================================================================
     def setTextures(self, face):
         
+        bMaterial = self.bmaterial
+        
+        if bMaterial and bMaterial.irrb_use_blender_textures:
+            tslots = [bMaterial.texture_slots[i] for i in range(len(bMaterial.texture_slots)) \
+                      if bMaterial.texture_slots[i]]
+    
+            layerNumber = 1
+            for i in range(len(tslots)):
+                tslot = tslots[i]
+                tex = tslot.texture
+                if (tex.type == 'IMAGE') and (tslot.texture_coords == 'UV') and \
+                   (tslot.uv_layer != '') and (tex.image != None):
+                    self.bimages.append(tex.image)
+                    layerName = 'Layer{}'.format(layerNumber)
+                    try:
+                        texFile = self.exporter.getImageFileName(tex.image, 0)
+                    except:
+                        texFile = '** error accessing {} **'.format(tex.image.name)
+                    self.attributes[layerName]['Texture'] = texFile
+                    layerNumber += 1
+                    if layerNumber >= 5:
+                        break;
+            return
+            
         # count images assigned to uv layers
         uvImageCount = 0
         for layerNumber in range(len(self.bmesh.uv_textures)):
@@ -2466,32 +2493,6 @@ class iMaterial:
                     layerName = 'Layer{}'.format(layerNumber + 1)
                     self.attributes[layerName]['Texture'] = texFile
             return        
-        
-        # no uv images so look for images in texture slots
-        if self.bmaterial == None:
-            return
-        
-        bMaterial = self.bmaterial
-        
-        tslots = [bMaterial.texture_slots[i] for i in range(len(bMaterial.texture_slots)) \
-                  if bMaterial.texture_slots[i]]
-
-        icount = 0
-        for i in range(len(tslots)):
-            tslot = tslots[i]
-            tex = tslot.texture
-            if (tex.type == 'IMAGE') and (tslot.texture_coords == 'UV') and \
-               (tslot.uv_layer != '') and (tex.image != None):
-                self.bimages.append(tex.image)
-                layerName = 'Layer{}'.format(layerNumber + 1)
-                try:
-                    texFile = self.exporter.getImageFileName(tex.image, 0)
-                except:
-                    texFile = '** error accessing {} **'.format(tex.image.name)
-                self.attributes[layerName]['Texture'] = texFile
-                icount += 1
-                if icount >= 5:
-                    break;
         
 #=============================================================================
 #                                i S c e n e
@@ -5791,6 +5792,7 @@ class IrrbMaterialProps(bpy.types.Panel):
 
         row = layout.row()
         row.prop(mat, 'irrb_link_diffuse')
+        row.prop(mat, 'irrb_use_blender_textures')
         
         row = layout.row()
         row.label('ZBuffer')
@@ -5835,7 +5837,7 @@ class IrrbMaterialProps(bpy.types.Panel):
         row = layout.row()
         row.prop(mat, 'irrb_shininess')
         row.prop(mat, 'irrb_thickness')
-
+        
         def layoutLayer(layer):
             layout.separator()
             row = layout.row()
