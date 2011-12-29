@@ -362,3 +362,7 @@ div.irrb-left {
 	-webkit-box-shadow: 5px 5px 10px #000000;
 	-moz-box-shadow: 5px 5px 10px #000000;
 }
+
+div.irrb-padleft140 {
+	margin-left: 180px;
+	padding-left: 140px;}
