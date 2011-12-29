@@ -345,6 +345,8 @@ defMaterialAttributes = {
     'ZBuffer': 1,
     'AntiAliasing': 5,  # EAAM_SIMPLE | EAAM_LINE_SMOOTH,
     'ColorMask': 15,  # ECP_ALL
+    'PolygonOffsetFactor': 0, 
+    'PolygonOffsetDirection': 'Front',
     'Layer1': {
         'Texture': '',
         'TextureWrap': 'texture_clamp_repeat',   # <= 1.6
@@ -2000,7 +2002,7 @@ def _registerIrrbProperties():
 
     bpy.types.Material.irrb_shininess = FloatProperty(name='Shininess',
         description='Specular shininess', default=0.0,
-        min=sys.float_info.min, max=sys.float_info.max,
+        min=0.0, max=128.0,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
@@ -2015,6 +2017,18 @@ def _registerIrrbProperties():
 
     bpy.types.Material.irrb_use_blender_textures = BoolProperty(name='Use Blender Textures',
         description='Use images from Blender texture layers', default=False, options=emptySet)
+    
+    bpy.types.Material.irrb_polyoffset_factor = IntProperty(name='Poly Offset Factor',
+        description='Polygon Offset Factor',
+        min=0, max=7, default=0, options=emptySet)
+    
+    bpy.types.Material.irrb_polyoffset_direction = EnumProperty(name='Poly Offset Direction',
+        items=(('POLY_OFFDIR_FRONT', 'Front', ''),
+        ('POLY_OFFDIR_BACK', 'Back', ''),
+        ),
+        default='POLY_OFFDIR_FRONT',
+        description='Direction the polygon offset is applied to',
+        options=emptySet)
 
     wrap_options = (('ETC_REPEAT', 'Repeat', ''),
         ('ETC_CLAMP', 'Clamp', ''),
@@ -2309,6 +2323,13 @@ class iMaterial:
         self.attributes['ZBuffer'] = E_COMPARISON_FUNC[bmat.irrb_zbuffer]
         self.attributes['AntiAliasing'] = \
             E_ANTI_ALIASING_MODE[bmat.irrb_antialiasing]
+            
+        self.attributes['PolygonOffsetFactor'] = int(bmat.irrb_polyoffset_factor)
+        
+        pdir = 'Front'
+        if bmat.irrb_polyoffset_direction == 'POLY_OFFDIR_BACK':
+            pdir = 'Back'
+        self.attributes['PolygonOffsetDirection'] = pdir
 
         cmask = 0
         if bmat.irrb_color_mask_alpha:
@@ -2423,6 +2444,10 @@ class iMaterial:
             self.attributes['AntiAliasing'])
         self._iwrite(file, i2, 'int', 'ColorMask',
             self.attributes['ColorMask'])
+        self._iwrite(file, i2, 'int', 'PolygonOffsetFactor', 
+            self.attributes['PolygonOffsetFactor'])
+        self._iwrite(file, i2, 'enum', 'PolygonOffsetDirection',
+            self.attributes['PolygonOffsetDirection'])
 
         for i in range(1, textureCount + 1):
             lname = 'Layer{}'.format(i)
@@ -5805,6 +5830,14 @@ class IrrbMaterialProps(bpy.types.Panel):
         row = layout.row()
         row.label('Color Material')
         row.prop(mat, 'irrb_color_material', '')
+        
+        row = layout.row()
+        row.label('Polygon Offset Factor')
+        row.prop(mat, 'irrb_polyoffset_factor', '')
+
+        row = layout.row()
+        row.label('Polygon Offset Direction')
+        row.prop(mat, 'irrb_polyoffset_direction', '')
 
         row = layout.row()
         row.label(text='Ambient')
