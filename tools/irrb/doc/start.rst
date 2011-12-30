@@ -22,7 +22,7 @@ you to know the relationship between Blenders "Objects" and "Object Data".
 In a general sense, "Objects" are things (meshes, cameras, lights, etc.) you add 
 to a Blender/Irrlicht scene that have three things in common:
 
-* **Type** - Identifies the object type (mesh, camera, light).
+* **Type** - Identifies the object type (mesh, camera, light, empty, etc.).
 * **Transform** - The object position, rotation, and scale.
 * **Data** - The object type specific data.
 

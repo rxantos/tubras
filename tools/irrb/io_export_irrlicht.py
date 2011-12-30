@@ -1263,6 +1263,14 @@ def writeAttributes(file, indent, target):
         elif isinstance(data, float):
             stype = 'float'
             svalue = float2str(data)
+        elif str(type(data)) == "<class 'Blender IDArray'>":
+            if len(data) == 2:
+                stype = 'vector2d'                
+            elif len(data) == 3:
+                stype = 'vector3d'
+                
+            list = data.to_list()
+            svalue = _formatFloats(list)                
 
         if name.lower().find('color') >= 0:
             stype = 'colorf'
