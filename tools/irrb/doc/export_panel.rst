@@ -21,7 +21,7 @@ you may also choose to optionally walktest your exported scene.
      "{out}/mdl/".
 
    All file references in the generated scene and mesh files are relative as well.  
-   This allows scenes to be loaded from arbitray locations as long as the base 
+   This allows scenes to be loaded from arbitrary locations as long as the base 
    and relative sub-directories remain intact.
 
    It is also worth noting that the default "mdl/" and "tex/" sub-directories used

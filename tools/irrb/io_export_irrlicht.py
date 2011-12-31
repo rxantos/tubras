@@ -5217,7 +5217,7 @@ class iExporter:
             result = os.path.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
-            result = ls.path.relpath(fullFileName, self.gBaseDir)
+            result = os.path.relpath(fullFileName, self.gBaseDir)
 
         result0 = result
 
@@ -5226,11 +5226,22 @@ class iExporter:
             result = self.gTexDir + fileName + ext
         else:
             result = self.gTexDir + fileName + fileExt
+            
+        # replace file name with Blender's image.name to avoid dups 
+        # from different directories overwriting each other.
+        dirname, fname = os.path.split(result)
+        result = '{}{}{}'.format(dirname, os.sep, imageName)
+            
+        dirname, fname = os.path.split(result0)
+        result0 = '{}{}{}'.format(dirname, os.sep, imageName)
+            
         debug('result0: {}'.format(result0))
         debug('result1: {}'.format(result))
         self.gImageInfo[imageName] = (result0, result)
+        
         if which == 0:
             return result0
+        
         return result
 
     #=========================================================================
