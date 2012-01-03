@@ -237,7 +237,7 @@ layer. The reflection map should be set as Texture 1. The transparency depends o
 colors. A texture which will not reflect can be set als Texture 2. Please note that this material type is currently
 not 100% implemented in OpenGL. It works in Direct3D.
 
-**normalmap_solid* - A solid normal map renderer. First texture is the color map, the second should be the
+**normalmap_solid** - A solid normal map renderer. First texture is the color map, the second should be the
 normal map. Note that you should use this material only when drawing geometry consisting of vertices of type
 S3DVertexTangents (EVT_TANGENTS). You can convert any mesh into this format using
 IMeshManipulator::createMeshWithTangents() (See SpecialFX2 Tutorial). This shader runs on vertex shader

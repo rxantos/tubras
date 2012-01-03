@@ -20,7 +20,7 @@ Instructions on installing and using **iwalktest** may be found here: :doc:`irrB
 The "Walktest" GUI button will only appear in **irrB**'s export sub-panel if the 
 following conditions are met: 
 
-	1. The "IWALKTEST" OS environment variable is defined. 
+	1. The "**IWALKTEST**" OS environment variable is defined. 
 
 	2. The **irrB** "Scene" option (Export Scene) is selected in the export sub-panel. 
 
@@ -33,30 +33,55 @@ defined walk test application with the last scene exported.
 
 ---- 
 
-Walktest Setup
-==============
-A couple of notes on how irrB executes the external application: 
+Walk Testing Setup
+==================
+To have **irrB** invoke your own custom application for walk testing, you must
+create an OS environment variable named "**IWALKTEST**".  The value you assign
+to the **IWALKTEST** environment variable should be the full path to your application
+executable.
 
-* **irrB** sets the current directory to the directory in which the external application 
-  resides before running the application. 
+You may choose to pass your application two variables that **irrB** pre-defines:
 
-* irrB passes the full scene file path and file name to the external application. If 
-  the environment variable contains a "$1", the scene file is substituted in its 
-  place. A "$2" substitution variable is replaced with value of the "Output Directory" path.
+	"$1" - The full path to the scene file that was exported.
+	
+	"$2" - The value of the "Out Directory" property in the **irrB** export sub-panel.
+	
+For example, say your application is stored as:
 
+	"c:\\myapps\\mygame\\mygame.exe"
+	
+and it requires a command line parameter "-i" followed by the scene file name. In 
+this case you would set the **IWALKTEST** environment variable to:
+
+	IWALKTEST=c:\\myapps\\mygame\\mygame.exe -i "$1"
+	
+**irrB** will then invoke "mygame.exe" for walk testing and pass it the scene 
+file name (full path) that was exported.
+    
+.. note:: 
+
+	**irrB** sets the current directory to the directory in which the external 
+	application resides before running the application. 
+	
+	**irrB** passes the full scene file path and file name to the external 
+	application through the "**$1**" substitution variable. 
+	
+	If the "Pack Files" export option is selected, the full path to the generated 
+	.zip file is passed as the scene file name.
+	
 ----
 
-Walktest Options
-================
+Walktest Configuration Options
+==============================
 
-Walktest options defined in the **irrB** export sub-panel are saved to a "configuration"
-file alongside the scene file.  This file is named "{Scene Name}.cfg".  For example, 
-if you export a scene named "TestScene", the walktest options will be saved to a
-file named "TestScene.cfg".
+Walktest configuration options defined in the **irrB** export sub-panel are saved 
+to a "configuration" file alongside the scene file.  This file is named 
+"{Scene Name}.cfg".  For example, if you export a scene named "TestScene", the 
+walktest options will be saved to a file named "TestScene.cfg".
 
-The format of walktest configuration file is that of an .ini file.
+The format of the walktest configuration file is that of an .ini file.
 
-Sample contents of a configuration file::
+Example contents of a walk test configuration file::
 
 	[options]
 	debug = 4
