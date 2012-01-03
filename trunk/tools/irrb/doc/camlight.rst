@@ -5,9 +5,16 @@ Cameras and Lights
 .. toctree::
    :maxdepth: 2
 
-irrB allows camera and light node data to be exported to scene files. Camera/Light node 
-attributes are based on some of Blenders settings but may be overridden by assigning specific 
-Blender ID Properties.
+**irrB** allows camera and light node data to be exported to scene files. Camera
+and light data is only exported when the corresponding is selected in **irrB**'s
+export sub-panel.
+
+.. container:: irrb-right
+
+	.. image:: _static/img017.png 
+
+Irrlicht camera and light specific properties may be set in **irrB**'s object
+sub-panel.  
 
 Camera Details 
 --------------
@@ -35,19 +42,13 @@ A camera node in a .irr scene file will appear as follows::
       </attributes>
    </node>
    
-The camera specific attributes are: Target, UpVector, Fovy, Aspect, ZNear, and ZFar. 
-All but the Target and UpVector may be set using the Camera properties (F9): 
-
-Fovy. Set to (2 * atan(16.0 / (Blenders Lens -> Lens value)). May be overridden with a "float" logic property named "Fovy". 
-Aspect. Set to the constant 1.25. May be overridden with a "float" logic property named "Aspect". 
-ZNear. Set to Clipping -> Start value. 
-ZFar. Set to Clipping -> End value. 
-For now, the Target and UpVector attributes are set to (0,0,0) and (0,1,0) respectively. 
-
-For now, the Target and UpVector attributes are set to (0,0,0) and (0,1,0) respectively. 
-
 Light Details
 -------------
+
+.. container:: irrb-right
+
+	.. image:: _static/img018.png 
+
 A light node in a .irr scene file will appear as follows::
 
    <node type="light">
@@ -71,21 +72,4 @@ A light node in a .irr scene file will appear as follows::
          <bool name="CastShadows" value="true" />
       </attributes>
    </node>
-The light specific attributes are: LightType, DiffuseColor, SpecularColor, Attenuation,
-Radius, and CastShadows. 
-
-LightType. Based on Blenders lamp type: 
-
-* **lamp** -> Point 
-* **area** -> Directional 
-* **spot** -> Spot 
-* **sun** -> Directional 
-* **hemi** -> Directional 
-  
-* **AmbientColor** - Constant (0,0,0). 
-* **DiffuseColor** - Set to the R,G,B components of the light color. 
-* **SpecularColor** - Constant (1,1,1). 
-* **Attenuation** - Set to (0.5 / (Blenders Energy Value)). 
-* **Radius** - Set to (2.0 * (Blenders Distance Value)). 
-* **CastShadows** - Constant "True". 
-
+   

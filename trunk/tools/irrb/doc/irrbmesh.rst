@@ -7,8 +7,7 @@ Binary Mesh Format
 .. toctree::
    :maxdepth: 2
 
-Key Points
-==========
+.. note::
  
 	* The binary mesh format is currently **experimental and subject to change**.
 	* irrbmesh files (binary mesh) load into your application very quickly. 
@@ -38,10 +37,10 @@ Using .irrbmesh In Your Application
 It is relatively easy to enable your application(s) to read and write .irrbmesh 
 files. Simply save the following files to your applications source directory: 
 
-	* CIrrbMeshFileLoader.h 
-	* CIrrBMeshFileLoader.cpp
-	* CIrrbMeshWriter.h 
-	* CIrrBMeshWriter.cpp
+	* `CIrrBMeshFileLoader.h  <http://tubras.googlecode.com/svn/trunk/tools/irrlicht/extensions/CIrrBMeshFileLoader.h>`_
+	* `CIrrBMeshFileLoader.cpp <http://tubras.googlecode.com/svn/trunk/tools/irrlicht/extensions/CIrrBMeshFileLoader.cpp>`_
+	* `CIrrBMeshWriter.h <http://tubras.googlecode.com/svn/trunk/tools/irrlicht/extensions/CIrrBMeshWriter.h>`_
+	* `CIrrBMeshWriter.cpp <http://tubras.googlecode.com/svn/trunk/tools/irrlicht/extensions/CIrrBMeshWriter.cpp>`_
  
 To read .irrbmesh files::
 
