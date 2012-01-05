@@ -363,6 +363,19 @@ div.irrb-left {
 	-moz-box-shadow: 5px 5px 10px #000000;
 }
 
+div.irrb-center {
+	clear: none;
+	border: 1px solid #BDC58F;
+	box-shadow: 5px 5px 10px #000000;
+	-webkit-box-shadow: 5px 5px 10px #000000;
+	-moz-box-shadow: 5px 5px 10px #000000;
+}
+
 div.irrb-padleft140 {
 	margin-left: 180px;
-	padding-left: 140px;}
+	padding-left: 140px;
+	}
+
+div.body p.caption {
+	text-align: center;
+}

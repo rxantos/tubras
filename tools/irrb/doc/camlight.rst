@@ -1,6 +1,7 @@
 Cameras and Lights
 =========================
 .. highlight:: cpp
+	:linenothreshold: 5
 
 .. toctree::
    :maxdepth: 2
@@ -9,15 +10,14 @@ Cameras and Lights
 and light data is only exported when the corresponding is selected in **irrB**'s
 export sub-panel.
 
-.. container:: irrb-right
-
-	.. image:: _static/img017.png 
-
 Irrlicht camera and light specific properties may be set in **irrB**'s object
 sub-panel.  
 
 Camera Details 
 --------------
+.. container:: irrb-right
+
+	.. image:: _static/img017.png 
 
 A camera node in a .irr scene file will appear as follows::
 
