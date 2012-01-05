@@ -1666,8 +1666,8 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Object.irrb_dome_radius = FloatProperty(name='Radius',
-        description='Radius', default=10.0,
-        min=1.0, max=1000.0, soft_min=1.0, soft_max=1000.0,
+        description='Radius', default=500.0,
+        min=1.0, max=10000.0, soft_min=1.0, soft_max=10000.0,
         step=3, precision=2,
         options=emptySet)
 
@@ -4879,6 +4879,10 @@ class iExporter:
             addWarning(msg)
             return None
         
+        if len(bObject.material_slots) == 0:
+            addWarning('SkyDome missing material')
+            return None
+            
         mat = bObject.material_slots[0].material
         if not mat:
             addWarning('SkyDome missing material')
