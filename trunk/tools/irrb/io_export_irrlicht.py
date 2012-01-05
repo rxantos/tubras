@@ -2228,6 +2228,7 @@ class iMaterial:
         self.exporter = exporter
         self.useVertexColor = True
         self.vtCustom = None
+        self.globalFogEnabled = False
 
         #
         # Default attributes
@@ -2238,6 +2239,7 @@ class iMaterial:
 
         if exporter.gContext.scene.world and \
            exporter.gContext.scene.world.mist_settings.use_mist:
+            self.globalFogEnabled = True
             self.attributes['FogEnable'] = True
 
         self._updateFromBlenderMaterial(self.bmaterial)
@@ -2325,7 +2327,8 @@ class iMaterial:
         self.attributes['ZWriteEnable'] = int(bmat.irrb_zwrite_enable)
         self.attributes['BackfaceCulling'] = int(bmat.irrb_backcull)
         self.attributes['FrontfaceCulling'] = int(bmat.irrb_frontcull)
-        self.attributes['FogEnable'] = bmat.irrb_fog
+        if self.globalFogEnabled:
+            self.attributes['FogEnable'] = bmat.irrb_fog
         self.attributes['NormalizeNormals'] = int(bmat.irrb_normalize_normals)
         self.attributes['UseMipMaps'] = int(bmat.irrb_use_mipmaps)
         self.attributes['ZBuffer'] = E_COMPARISON_FUNC[bmat.irrb_zbuffer]
