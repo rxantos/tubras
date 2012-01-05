@@ -379,3 +379,10 @@ div.irrb-padleft140 {
 div.body p.caption {
 	text-align: center;
 }
+
+table.docutils td, table.docutils th {
+    border-color: -moz-use-text-color -moz-use-text-color #AAAAAA;
+    border-style: solid;
+    border-width: 1px;
+    padding: 1px 8px 1px 5px;
+}
