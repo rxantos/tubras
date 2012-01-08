@@ -31,6 +31,8 @@ The yoda mesh contains approximately 60k faces in a single mesh buffer. The main
 reason the .irrbmesh format performs so well is that it mimics Irrlicht's 
 internal mesh buffer and material formats. Very little parsing is required.  
 
+----
+
 Using .irrbmesh In Your Application
 ===================================
  
