@@ -9,7 +9,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 
 Implemented Features:
 
-* Blender Scene data is exported to Irrlicht native scene format (.irr). 
+* Blender Scene data is exported to the Irrlicht native scene format (.irr). 
 * Blender Mesh data is exported to the Irrlicht native mesh format (.irrmesh). 
 * Export Blender ID Properties and Logic Properties as Irrlicht scene UserData. 
 * Export Blender Lamp, Mesh, Camera, and Empty objects. 
