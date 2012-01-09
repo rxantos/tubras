@@ -29,6 +29,7 @@ irrB Documentation Contents
    config
    notes
    samples
+   tutorials
    faq
    changelog
    

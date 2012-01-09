@@ -267,14 +267,14 @@ _G = {
         'pack': False,
         'makeexec': False,
         'binary': False,
-        'use_blender_materials': False,
         'debug': True,
         'walktest': True,
         'out_directory': '',
-        'mdl_directory': 'mdl',
-        'tex_directory': 'tex',
-        'scene_directory': '.',
-        'copy_images': True,
+        'save_on_export': True,
+    },
+    'directories': {
+        'mdl' : 'mdl',
+        'tex' : 'tex',
     },
     'scene': {
         'OccludesLight': 0,
@@ -1308,10 +1308,10 @@ def checkDirectory(dirVal):
     return tempDir
 
 #=============================================================================
-#                          s e t D i r e c t o r y
+#                          g e t D i r e c t o r y
 #=============================================================================
-def setDirectory(base, option):
-    result = _G['export'][option]
+def getDirectory(base, option):
+    result = _G['directories'][option]
     if (result[0] == '/') or (result.find(':') >= 0):  # absolute?
         result = filterDirPath(result)
     else:
@@ -1326,7 +1326,9 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
     SelectedOnly, ExportLights, ExportCameras, ExportAnimations,
      ExportAnimationTails, ExportPhysics, ExportPack, ExportExec, ExportBinary,
      runWalkTest, IrrlichtVersion):
-    _saveConfig()
+    
+    if ('save_on_export' in _G['export']) and (_G['export']['save_on_export']): 
+        _saveConfig()
 
     if not filename.lower().endswith('.irr'):
         filename += '.irr'
@@ -1334,10 +1336,10 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
     OutDirectory = filterDirPath(OutDirectory)
     checkDirectory(OutDirectory)
 
-    # setup and check scene directory
-    SceneDirectory = setDirectory(OutDirectory, 'scene_directory')
-    MeshDirectory = setDirectory(OutDirectory, 'mdl_directory')
-    ImageDirectory = setDirectory(OutDirectory, 'tex_directory')
+    # retrieve the various directories
+    SceneDirectory = getDirectory(OutDirectory, '.')
+    MeshDirectory = getDirectory(OutDirectory, 'mdl')
+    ImageDirectory = getDirectory(OutDirectory, 'tex')
 
     operator.report({'INFO'}, 'irrb Export')
 
@@ -4393,7 +4395,6 @@ class iExporter:
         if self.gExportExec:
             self.gExportPack = True
 
-        self.gCopyImages = _G['export']['copy_images']
         self.gBinary = Binary
         self.gDebug = Debug
         self.gMeshFileName = ''
@@ -4419,8 +4420,8 @@ class iExporter:
         debug('  Scene Directory: ' + self.gSceneDir)
         debug('   Mesh Directory: ' + self.gMeshDir)
         debug('  Image Directory: ' + self.gTexDir)
-        debug('    mdl Directory: ' + _G['export']['mdl_directory'])
-        debug('    tex Directory: ' + _G['export']['tex_directory'])
+        debug('    mdl Directory: ' + _G['directories']['mdl'])
+        debug('    tex Directory: ' + _G['directories']['tex'])
         debug('           Binary: ' + ('True' if self.gBinary else 'False'))
         debug('   Export Cameras: ' +
             ('True' if self.gExportCameras else 'False'))
@@ -4432,8 +4433,6 @@ class iExporter:
             ('True' if self.gExportPack else 'False'))
         debug('Export Executable: ' +
             ('True' if self.gExportExec else 'False'))
-        debug('      Copy Images: ' +
-            ('True' if self.gCopyImages else 'False'))
         debug('     Run WalkTest: ' +
             ('True' if self.gRunWalkTest else 'False'))
         debug('  Image Extension: ' + ('Original' if self.gTexExtension ==
@@ -5040,7 +5039,7 @@ class iExporter:
             return
         if bImage.packed_file != None:
             self._savePackedTexture(bImage, filename)
-        elif self.gCopyImages:
+        else:
             self._copyExternalImage(bImage, filename)
 
     #=========================================================================
@@ -5220,7 +5219,7 @@ class iExporter:
         if self.gTexExtension != '.???':
             ext = self.gTexExtension
 
-        if (bImage.packed_file != None) or self.gCopyImages:
+        if bImage.packed_file != None:
             result = os.path.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
