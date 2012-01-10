@@ -11,7 +11,7 @@ bl_info = {
     'description': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
-    'blender': (2, 6, 0),
+    'blender': (2, 6, 1),
     'api': 39685,
     'location': 'File > Import-Export',
     'warning': '',
@@ -278,6 +278,12 @@ _G = {
     },
     'scene': {
         'OccludesLight': 0,
+    },
+    'walktest': {
+        'show_help' : True,
+        'show_debug' : True,
+        'vsync' : True,
+        'antialias' : True,
     },
     'standard': {
         'Id': -1,
@@ -1337,7 +1343,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
     checkDirectory(OutDirectory)
 
     # retrieve the various directories
-    SceneDirectory = getDirectory(OutDirectory, '.')
+    SceneDirectory = OutDirectory
     MeshDirectory = getDirectory(OutDirectory, 'mdl')
     ImageDirectory = getDirectory(OutDirectory, 'tex')
 
@@ -1402,7 +1408,7 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Scene.irrb_export_pack = BoolProperty(name='Pack Files',
-        description='Pack files into a single {scene}.zip file', default=False,
+        description='Pack files into a single {scene}.zip file', default=_G['export']['pack'],
         options=emptySet)
 
     bpy.types.Scene.irrb_export_makeexec = BoolProperty(name='Make Executable',
@@ -1453,15 +1459,15 @@ def _registerIrrbProperties():
 
     # scene walktest config parameters
     bpy.types.Scene.irrb_wt_showhelp = BoolProperty(name='Show Help',
-        description='Show help window on startup', default=True,
+        description='Show help window on startup', default=_G['walktest']['show_help'],
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_antialias = BoolProperty(name='Antialias',
-        description='Use antialiasing', default=True,
+        description='Use antialiasing', default=_G['walktest']['antialias'],
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_debug = BoolProperty(name='Debug',
-        description='Show debug console', default=True,
+        description='Show debug console', default=_G['walktest']['show_debug'],
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_fullscreen = BoolProperty(name='Full Screen',
@@ -1469,7 +1475,7 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_vsync = BoolProperty(name='VSync',
-        description='Use vertical synchronization', default=True,
+        description='Use vertical synchronization', default=_G['walktest']['vsync'],
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_stencilbuffer = BoolProperty(name='Stencil Buffer',
@@ -5516,6 +5522,8 @@ class IrrbExportOp(bpy.types.Operator):
         _G['export']['animation_tails'] = scene.irrb_export_animation_tails
         _G['export']['physics'] = scene.irrb_export_physics
         _G['export']['pack'] = scene.irrb_export_pack
+        _G['walktest']['show_help'] = scene.irrb_wt_showhelp
+        _G['walktest']['show_debug'] = scene.irrb_wt_debug
         exportBinary = False
         if 'IMESHCVT' in os.environ:
             _G['export']['binary'] = scene.irrb_export_binary
