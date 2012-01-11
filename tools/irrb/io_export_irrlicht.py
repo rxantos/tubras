@@ -3139,7 +3139,11 @@ class iScene:
         if bObject.type != 'MESH':
             return
 
-        material = iMaterial(bObject, 'skybox', self.exporter, None)
+        bMaterial = None
+        if len(bObject.material_slots) > 0:
+            bMaterial = bObject.material_slots[0].material
+
+        material = iMaterial(bObject, 'skybox', self.exporter, bMaterial)
         topImage = sImages['top'].image
         botImage = sImages['bottom'].image
         leftImage = sImages['left'].image
@@ -3176,10 +3180,10 @@ class iScene:
         if bObject.type != 'MESH':
             return
 
-        bMesh = bObject.data
         bMaterial = None
-        if len(bMesh.materials) > 0:
-            bMaterial = bMesh.materials[0]
+        if len(bObject.material_slots) > 0:
+            bMaterial = bObject.material_slots[0].material
+            
         material = iMaterial(bObject, 'skydome', self.exporter, bMaterial)
 
         i1 = getIndent(level, 3)
