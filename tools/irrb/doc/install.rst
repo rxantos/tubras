@@ -18,18 +18,16 @@ The current version may be downloaded from here: http://tubras.googlecode.com/fi
 The contents of the zip package are: 
 
 * io_export_irrlicht.py
-* docs/changes.txt
-* docs/license.html
-* docs/UserGuide.pdf
+* docs/{html documentation files}
 
 To install **irrB**, unzip the contents of the zip file into a temporary directory 
 and install it as a Blender **addon**.
 
 1. Start Blender and call up the **User Preferences** dialog (File | User Preferences..).  
-2. Click on the **Add-Ons** tab and then the **Install Add-On...** button located at 
+2. Click on the **Addons** tab and then the **Install Addon...** button located at 
    the bottom of the dialog.
 3. Navigate to the directory where you previously unzipped the **irrB** zip file into, select 
-   the file **io_export_irrlicht.py**, and then click the **Install Add-On...** button. 
+   the file **io_export_irrlicht.py**, and then click the **Install Addon...** button. 
 4. Locate the **irrB** exporter in the **Import-Export** section and enable it by selecting 
    the corresponding check box. 
 

@@ -7,8 +7,8 @@ Cameras and Lights
    :maxdepth: 2
 
 **irrB** allows camera and light node data to be exported to scene files. Camera
-and light data is only exported when the corresponding is selected in **irrB**'s
-export sub-panel.
+and light data is only exported when the corresponding option is selected in 
+**irrB**'s export sub-panel.
 
 Irrlicht camera and light specific properties may be set in **irrB**'s object
 sub-panel.  

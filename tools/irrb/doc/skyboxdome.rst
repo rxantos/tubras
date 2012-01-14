@@ -62,3 +62,10 @@ for the sky dome.
 	The sky dome material should have "Fog" disabled in the **irrB** sub-panel 
 	to prevent the image from being affected by fog.  If sky dome image appears
 	as a solid color, the materials "Fog" setting is likely enabled.
+
+.. container:: irrb-left
+
+	.. figure:: _static/img028.png
+
+		Sample Skybox/dome .blend file - `03-SkyBoxDome.blend <http://tubras.googlecode.com/svn/trunk/tools/blendfiles/26/03-SkyBoxDome.blend>`_
+
