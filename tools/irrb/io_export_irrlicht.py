@@ -272,26 +272,11 @@ _G = {
         'out_directory': '',
         'save_on_export': True,
     },
-    'directories': {
-        'mdl' : 'mdl',
-        'tex' : 'tex',
-    },
-    'scene': {
-        'OccludesLight': 0,
-    },
     'walktest': {
         'show_help' : True,
         'show_debug' : True,
         'vsync' : True,
         'antialias' : True,
-    },
-    'standard': {
-        'Id': -1,
-        'AutomaticCulling': 1,
-        'Visible': 1,
-        'DebugDataVisible': 0,
-        'IsDebugObject': 0,
-        'ReadOnlyMaterials': 0,
     },
 }
 
@@ -1316,8 +1301,12 @@ def checkDirectory(dirVal):
 #=============================================================================
 #                          g e t D i r e c t o r y
 #=============================================================================
-def getDirectory(base, option):
-    result = _G['directories'][option]
+def getDirectory(scene, base, dname):
+    result = dname
+    attr = 'irrb_{}'.format(dname)
+    if (attr in scene.keys()) and isinstance(scene[attr], str):
+        result = scene[attr]
+    
     if (result[0] == '/') or (result.find(':') >= 0):  # absolute?
         result = filterDirPath(result)
     else:
@@ -1344,8 +1333,8 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
 
     # retrieve the various directories
     SceneDirectory = OutDirectory
-    MeshDirectory = getDirectory(OutDirectory, 'mdl')
-    ImageDirectory = getDirectory(OutDirectory, 'tex')
+    MeshDirectory = getDirectory(context.scene, OutDirectory, 'mdl')
+    ImageDirectory = getDirectory(context.scene, OutDirectory, 'tex')
 
     operator.report({'INFO'}, 'irrb Export')
 
@@ -4430,8 +4419,6 @@ class iExporter:
         debug('  Scene Directory: ' + self.gSceneDir)
         debug('   Mesh Directory: ' + self.gMeshDir)
         debug('  Image Directory: ' + self.gTexDir)
-        debug('    mdl Directory: ' + _G['directories']['mdl'])
-        debug('    tex Directory: ' + _G['directories']['tex'])
         debug('           Binary: ' + ('True' if self.gBinary else 'False'))
         debug('   Export Cameras: ' +
             ('True' if self.gExportCameras else 'False'))

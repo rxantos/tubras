@@ -48,7 +48,12 @@ The Cube.irrmesh file will reference the checkers texture as "tex/checkers.png":
 	<buffer>
 	<material bmat="uvmat:grid.png:00100">
 		<texture name="Texture1" value="tex/grid.png"/>
-        
+    
+.. note::
+
+	The "**mdl**" and "**tex**" directory names may be overridden by creating custom
+	scene string attributes named "**irrb_mdl**" and "**irrb_tex**" respectively.
+	    
 ----
 
 Image Copying
