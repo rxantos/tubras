@@ -15,16 +15,16 @@ remain intact.
 **irrB** allows you to choose a single Output Directory.  Depending on whether 
 or not you choose to export a scene file, **irrB** behaves as follows:
 
-	**Create Scene File** - Not Selected.  All mesh files (.irrmesh) and packed 
-	images are saved to the Output Directory location.
-	
-	**Create Scene File** - Selected.  All mesh files (.irrmesh) are saved to 
+	Create Scene File **Enabled** - All mesh files (.irrmesh) are saved to 
 	a sub-directory named **mdl** (model) underneath the Output Directory location.  
 	All packed textures are saved to a sub-directory named **tex** underneath the 
 	Output Directory location.
+	
+	Create Scene File **Disabled** All mesh files (.irrmesh) and packed 
+	images are saved to the Output Directory location.	
 
 Given:
-	1. You are exporting a singe scene named "test".
+	1. You are exporting a single scene named "test".
 	
 	2. The scene contains a single cube named "Cube", and a packed texture named "checkers.png".
 	
@@ -32,9 +32,9 @@ Given:
 
 The following will be generated:
 
-	* c:/scenes/test.irr		// scene file
-	* c:/scenes/mdl/Cube.irrmesh	// Cube mesh 
-	* c:/scenes/tex/checkers.png	// checkers texture
+	* c:\\scenes\\test.irr		// scene file
+	* c:\\scenes\\mdl\\Cube.irrmesh	// Cube mesh 
+	* c:\\scenes\\tex\\checkers.png	// checkers texture
 
 All mesh and texture references will be relative to the "Out Directory".  
 In the example above, the test.irr scene file will reference the Cube mesh as "mdl/Cube.irrmesh"::
@@ -72,15 +72,20 @@ to the Cube UV map, the Cube.irrmesh texture reference would then look like::
 The original image ("c:\\myimages\\patterns\\bricks.png") is copied to the 
 texture directory underneath the output directory: "{out directory}/tex/bricks.png".
 
-Images that have the same name but are stored in different directories, are 
-written to the texture directory using Blender's internally assigned file name.
+Images that have the same name but are stored in different directories are 
+written to the texture directory using Blender's internally assigned file name. This
+will prevent images with the same name from being overwritten.
 
 ----
 
 Packed Output
 =============
-**irrB** contains an option named "Pack Files" located in the export panel. When 
+**irrB** contains an export option named "Pack Files" located in the export panel. When 
 selected, **irrB** exports/writes all of the scene, model, and texture files
 following the rules outlined above.  After all of the files have been written
 and image files copied, **irrB** then packs (zip) all of the files into a 
-single file and names the file "{scene name}.zip". 
+single file and names the file "{scene name}.zip".  
+
+After the files have been packed, **irrB** then deletes the original files that 
+were written to the output directory.
+ 

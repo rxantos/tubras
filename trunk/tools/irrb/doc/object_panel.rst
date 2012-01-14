@@ -50,23 +50,31 @@ Custom Scene Node Properties
 Blender allows you to attach "custom" integer, string, bool, and/or float 
 properties to any Blender object.  When **irrB** detects that an object contains 
 custom Blender properties, those properties are then exported into the 
-corresponding scene nodes "user attributes". 
+corresponding scene nodes "user data" section. 
 
 This is useful for adding custom data that has meaning specific to your 
 application. For example, "spawn points":
 
-* Add a Blender "empty" object to a scene.
-* Add a custom boolean object property to the empty object named "spawn" 
-  and set it to "True".
-* Your application code could then include code that looks for scene nodes
-  with an attribute named "spawn" that was set to "True" and act
-  accordingly.
+	* Add a Blender "empty" object to a scene.
+	
+	* Add a custom boolean object property to the empty object named "spawn" 
+	  and set it to "True".
+	  
+	* Your application code could then include code that looks for scene nodes
+	  with an attribute named "spawn" that was set to "True" and act accordingly.
+  
+Additional information on adding custom properties may be found in the section
+named :doc:`Custom Properties </custom>`
 
 Common Options
 ==============
 
-**Export Object** - Indicator used to control whether or not a object is
+**Export Object** - Indicator used to control whether or not an object is
 exported.
+
+**Visible** - Indicator used to control whether or not an object is initially
+visible.  If un-checked, the object is still exported but won't be visible in 
+the scene until it is programatically set to be visible.
 
 **ID** - An arbitrary integer that may be used by your application to
 locate a specific scene node or group of scene nodes.

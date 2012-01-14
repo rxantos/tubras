@@ -14,7 +14,12 @@ Getting Started
   written to the Irrlicht scene file. 
 
 Before you start using **irrB** you should at the very least have a
-fundamental understanding of how to use Blender.
+fundamental understanding of how to use Blender. Some good resources and tutorials
+for learning Blender include:
+
+	* `Blender Art Magazine <http://blenderart.org>`_
+	* `Blender Cookie <http://cgcookie.com/blender>`_
+	* `Blender Tutorials <http://www.blender.org/education-help/tutorials>`_
 
 In order to better understand how **irrB** works with Blender, it will help
 you to know the relationship between Blenders "Objects" and "Object Data". 

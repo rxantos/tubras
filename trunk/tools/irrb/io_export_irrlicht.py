@@ -7,7 +7,7 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #=============================================================================
 bl_info = {
-    'name': 'Irrlicht format',
+    'name': 'Export: Irrlicht Format',
     'description': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
@@ -1579,6 +1579,10 @@ def _registerIrrbProperties():
         description='Export object to scene', default=True,
         options=emptySet)
 
+    bpy.types.Object.irrb_node_visible = BoolProperty(name='Visible',
+        description='Initial visibility of the object', default=True,
+        options=emptySet)
+
     bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',
         description='Object scene node id', default=-1,
         options=emptySet)
@@ -2741,7 +2745,7 @@ class iScene:
 
         self._iwrite(file, 'int', 'Id', bObject.irrb_node_id, i2)
 
-        self._iwrite(file, 'bool', 'Visible', 1, i2)
+        self._iwrite(file, 'bool', 'Visible', bObject.irrb_node_visible, i2)
         
         file.write(i2 + '<vector3d name="Position" ' \
             'value="{}"/>\n'.format(spos))
@@ -4490,9 +4494,10 @@ class iExporter:
                 if bObject.layers[i]]
             ccount = _getConstraintCount(bObject)
             debug('Object ({}): ' \
-                'Name={}, Type={}, Export={}, Layers={}, NodeAnim={}, ' \
+                'Name={}, Type={}, Export={}, Visible={}, Layers={}, NodeAnim={}, ' \
                 'Constraints={}'.format(idx,
                 bObject.name, bObject.type, bObject.irrb_node_export,
+                bObject.irrb_node_visible,
                 str(olayers), _hasNodeAnimations(bObject), ccount))
             if ccount > 0:
                 ccount = 1
@@ -5951,6 +5956,14 @@ class IrrbObjectProps(bpy.types.Panel):
 
         if not obj.irrb_node_export:
             return
+
+        split = layout.split()
+        lcol = split.column()
+        sub = lcol.column()
+        sub.label(text='Visible')
+        rcol = split.column()
+        sub = rcol.column()
+        sub.prop(obj, 'irrb_node_visible', text='')
 
         row = layout.row()
         row.label(text='ID')
