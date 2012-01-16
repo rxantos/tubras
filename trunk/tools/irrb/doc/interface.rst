@@ -20,20 +20,20 @@ when exporting scene objects and materials.
 
 :doc:`Export Panel </export_panel>`
 
-The **export** property panel is located in the Blender's **Scene** properties panel group. 
+The **export** property panel is located in Blender's **Scene** properties panel group. 
 This panel allows you to set export specific options and choose whether or not to walktest
 your scene after exporting.  
 
 :doc:`Object Panel </object_panel>`
 
-The **object** property panel is located in the Blender's **Object** properties panel group.  
+The **object** property panel is located in Blender's **Object** properties panel group.  
 This panel allows you to set an object's scene node ID, the object type, and type
 dependent properties.
 
 :doc:`Material Panel </material_panel>`
 
 The **material** property panel is located in Blender's **Material** properties panel group.
-This panel allows you to set every Irrlicht `SMaterial <http://irrlicht.sourceforge.net/docu/classirr_1_1video_1_1_s_material.html>`_ property from within
+This panel allows you to set every Irrlicht `SMaterial <http://irrlicht.sourceforge.net/docu/classirr_1_1video_1_1_s_material.html>`_ property within
 Blender.  
 
 
