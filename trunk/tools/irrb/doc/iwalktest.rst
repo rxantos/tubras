@@ -46,12 +46,12 @@ You may choose to pass your application two variables that **irrB** pre-defines:
 	
 	"$2" - The value of the "Out Directory" property in the **irrB** export sub-panel.
 	
-For example, say your application is stored as:
+For example, if your application is stored as:
 
 	"c:\\myapps\\mygame\\mygame.exe"
 	
-and it requires a command line parameter "-i" followed by the scene file name. In 
-this case you would set the **IWALKTEST** environment variable to:
+and it requires a command line parameter "-i" followed by the scene file name, 
+you need to set the **IWALKTEST** environment variable to:
 
 	IWALKTEST=c:\\myapps\\mygame\\mygame.exe -i "$1"
 	

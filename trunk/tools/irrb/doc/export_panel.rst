@@ -56,43 +56,37 @@ generated scene file name is based on the active Blender scene name:
 Therefore, if the scene being exported is named "TestLevel", the generated scene file 
 would be saved to "{Out Directory}/TestLevel.irr".
 
-**Light(s)** - Check box used to indicate whether or not light objects are written 
-to the Irrlicht scene file. 
+**Light(s)** - Export light objects to the Irrlicht scene file. 
 
-**Camera(s)** - Check box used to indicate whether or not camera objects are 
-written to the Irrlicht scene file. 
+**Camera(s)** - Export camera objects to the Irrlicht scene file. 
 
-**Selected Only** - Check box used to export only **objects** (including lights 
-and cameras) that are selected in the current scene. When un-selected, all objects 
-in Blender's visible layers will be exported. 
+**Selected Only** - Export only **objects** (including lights and cameras) that 
+are selected in the current scene. When un-selected, all objects in Blender's 
+visible layers will be exported. 
 
 **Animations** - not implemented.
 
-**Physics** - Check box used to indicate whether or not to write collision/physics 
-data to the Irrlicht scene file. When selected, additional physics related options 
-will appear.
+**Physics** - Export collision/physics data to the Irrlicht scene file. When 
+selected, additional physics related options will appear.
 
-**Pack Files** - Check box used to indicate whether or not **all** generated
-output will be packed into a single "{Out Directory}/{scene name}.zip" file. 
+**Pack Files** - Pack **all** generated into a single "{Out Directory}/{scene name}.zip" file. 
 
-**Make Executable** - Check box used to indicate whether or not to
-create an executable containing all of the scene, mesh, and texture
+**Make Executable** - Create an executable containing all of the scene, mesh, and texture
 data embedded in the generated executable.  The generated executable file name is based
 on the current Blender scene name - "{Out Directory}/{scene name}.exe". Note that this
 option will only appear if the iwalktest utility has been installed and
 properly configured.
 
-**Binary Meshes** - Check box used to indicate whether or not to convert mesh files to 
-the experimental ".irrbmesh" (binary .irrmesh) format. This option will only appear if 
-you have the imeshcvt utility installed and properly configured. For more information 
-on the .irrbmesh format, see the section named :doc:`Binary Mesh Format </irrbmesh>`. 
+**Binary Meshes** - Convert mesh files to the experimental ".irrbmesh" 
+(binary .irrmesh) format. This option will only appear if you have the imeshcvt 
+utility installed and properly configured. For more information on the .irrbmesh 
+format, see the section named :doc:`Binary Mesh Format </irrbmesh>`. 
 
-**Walktest** - Check box used to indicate whether or not to walktest your
-exported scene after exporting.  This option will only appear if you have
-the IWALKTEST environment variable defined. When selected, the program
-defined by the IWALKTEST environment variable is executed with your exported
-scene file passed as parameter immediately after a successful export.  The 
-":doc:`irrb Utilities </utilities>`" contain a program that you may use to 
+**Walktest** - Walk test your exported scene after exporting.  This option will 
+only appear if you have the IWALKTEST environment variable defined. When selected, 
+the program defined by the IWALKTEST environment variable is executed with your 
+exported scene file passed as parameter immediately after a successful export.  
+The ":doc:`irrb Utilities </utilities>`" contain a program that you may use to 
 examine an exported scene using the Irrlicht rendering engine.
 
 Walktest Options
@@ -108,31 +102,25 @@ will appear in the export panel.
 **Antialias** - Antialiasing enabled.  When enabled, **irrB**'s iwalktest
 application set's antialiasing to 4 when creating the video driver. 
 
-**VSync** - Check box used to indicate whether or not VSync is enabled.
+**VSync** - Enable VSync.
 
-**Full Screen** - Check box used to indicate whether or not to run in full
-screen mode.
+**Full Screen** - Run in full screen mode.
 
-**Keep Aspect** - Check box used to indicate whether or not the created
-window will maintain the original aspect of the monitor.
+**Keep Aspect** - The walk test window  should maintain the original aspect of 
+the default screen resolution.
 
-**Show Help** - Check box used to indicate whether or not iwalktest will
-display the help window on start up.
+**Show Help** - Show help on start up.
 
-**Debug** - Check box used to indicate whether or not detailed debug
-information will be logged to the walktest log file.
+**Debug** - Show debug info on start up.
 
-**Stencil Buffer** - Check box used to indicate whether or not to use
-stencil buffers.
+**Stencil Buffer** - Use stencil buffers.
 
-**Video Driver** - Drop down used to select the video driver to use. This
-option will only appear for Windows users.  The choices are DirectX or
-OpenGL.
+**Video Driver** - Which video driver to use. This option will only appear for 
+Windows users.  The choices are DirectX or OpenGL.
 
-**Resolution** - Drop down which allows you to choose the video resolution
-to use. Options include "minimal", "medium", "maximum", or "custom".  When
-"custom" is selected, the exact horizontal and vertical dimensions may be 
-explicitly entered.
+**Resolution** - The video resolution to use. Options include "minimal", 
+"medium", "maximum", or "custom".  When "custom" is selected, the exact 
+horizontal and vertical dimensions may be explicitly entered.
 
 **Velocity** - The camera movement speed in units per second.
 
@@ -151,8 +139,8 @@ Physics Options
 When the Physics and Walktest check boxes are selected, the following additional 
 options will appear in the export panel.
 
-**Physics System** - Drop down which allows you to choose either Bullet or
-Irrlicht as the collision/physics system. Note that Irrlicht is a collison
+**Physics System** - Which collision/physics system to use. Options include either 
+Bullet or Irrlicht as the collision/physics system. Note that Irrlicht is a collison
 only system so rigid body dynamics are ignored. 
 
 **Character Width** - The width in units to use for the character

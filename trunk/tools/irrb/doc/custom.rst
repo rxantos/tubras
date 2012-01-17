@@ -58,7 +58,7 @@ Accessing User Attributes In Code
 =================================
 
 In order to access scene node userData properties in your application, 
-you will need to create a class that implements the ISceneUserDataSerializer 
+you will need to create a class that implements the `ISceneUserDataSerializer <http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_user_data_serializer.html>`_ 
 interface.  This newly created class will also need to override the 
 **OnReadUserData** method::
 
