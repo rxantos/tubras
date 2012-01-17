@@ -41,16 +41,16 @@ saved to each object/nodes **userData** section. For example::
 Collision and Physics data are only written to the exported scene file when the 
 "Physics" option is enabled in the **irrB** export sub-panel.
 
-It's important to note that in order to take advantage of the exported Collision/Physcis
+It's important to note that in order to take advantage of the exported Collision/Physics
 data, your application will require code to extract, initialize, and process the
 data in order for it to be meaningful.  In other words, your application will need
 to integrate an existing 3rd party Collision/Physics libraray such as:
 
 	* Bullet - http://bulletphysics.org
-	* Physx - http://www.nvidia.com/object/physx_new.html
-	* Newton - http://newtondynamics.com
-	* Open Dynamics Engine (ODE) - http://www.ode.org
 	* Havok - http://havok.com
+	* Physx - http://www.nvidia.com/object/physx_new.html
+	* Open Dynamics Engine (ODE) - http://www.ode.org
+	* Newton - http://newtondynamics.com
 	
 You may also choose to use Irrlicht's own built-in collision system which is 
 capable of collision detection/response only (no dynamics simulation).

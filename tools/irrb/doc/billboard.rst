@@ -16,9 +16,9 @@ Creating a Billboard in Blender that will be exported as an Irrlicht Billboard s
 	**1.** Add a plane mesh to your scene at the position you would like the billboard to appear. The scale and rotation are ignored by **irrB**.
 	
 	**2.** Create a UV map for the plane and assign it an image using Blender's UV/Image Editor. 
-	The actual UV coordinates are ignored by **irrB**, but you must assigned an image to the UV map. 
+	The actual UV coordinates are ignored by **irrB**, but you must assign an image to the UV map. 
 	
-	**3.** Set the irrB Object Type to "Billboard" in the **irrB** object sub-panel.  Once the object
+	**3.** Set the **irrB** Object Type to "Billboard" in the **irrB** object sub-panel.  Once the object
 	type is set to "Billboard", you may then define the width, height, and vertex (shade) colors.
 
 ----

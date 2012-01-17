@@ -11,12 +11,12 @@ Sky Boxes and Domes
    
 Creating an Irrlicht Sky Box or Dome in Blender both require:
 
-	1. Create an arbitrary mesh. A single plane will work fine both a sky box or dome.
+	**1.** Create an arbitrary mesh. A single plane will work fine both a sky box or dome.
 	
-	2. Create a new Blender Material for the newly created mesh.
+	**2.** Create a new Blender Material for the newly created mesh.
 	
 After the material has been created, you simply need to assign the appropriate
-number of images to the material texture slots.
+number of images to the Blender material texture slots.
 
 For a Sky Dome, only a single image meeds to be assigned to the first texture slot.
 
@@ -25,7 +25,8 @@ What's more is that **each texture slot must be named appropriately** (not the i
 themselves).
 
 The texture slot names for a Sky Box node must be "left", "right", "top", "bottom",
-"front", and "back".  The names are case insensitive and the order is arbitrary.
+"front", and "back".  The names are case insensitive and the order they appear
+in the texture slots isn't relevant.
 
 ----
 
@@ -49,7 +50,7 @@ for the sky dome.
 	**Sphere Pct** - The percentage of the sphere to generate.  A value 
 	of 1.0 generates exactly the upper hemisphere. 1.1 will generate slightly 
 	more, and 2.0 will generate a full sphere. It is sometimes useful to use 
-	a value slightly bigger than 1 to avoid a gap between some ground place and the sky. 
+	a value slightly bigger than 1 to avoid a gap between the ground and sky. 
 	
 	**Radius** - The size of the sphere in "units".
 

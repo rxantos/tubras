@@ -7,10 +7,10 @@ Material Panel
 
 The **irrB** material panel gives explicit control over every available Irrlicht material
 property. Mapping from a Blender material to an Irrlicht is difficult at
-best so **irrB** takes the approach of letting the user control the settings.
+best so **irrB** takes the approach of letting the user control the settings directly.
 In cases where there is a direct match between a Blender material property
 and an Irrlicht material property, **irrB** will use the Blender property and
-include an additional panel element in the **irrB** material panel. 
+include it as an additional panel element in the **irrB** material panel. 
 
 .. container:: irrb-left
 
@@ -58,7 +58,7 @@ Irrlicht Material Texture Layers
 ================================
 Irrlicht allows up to four texture layers (`SMaterialLayer <http://irrlicht.sourceforge.net/docu/classirr_1_1video_1_1_s_material_layer.html>`_) 
 to be defined per material.  All of the pre-defined Irrlicht material types use 
-at most two texture layers. The current Irrlicht internal vertex format support
+at most two texture layers. The current Irrlicht internal vertex format supports
 at most two set of UV coordinates. 
 
 Each texture layer is made up of information that includes an image/texture reference
@@ -86,34 +86,35 @@ Irrlicht material properties may be found underneath Blender's Material panel gr
 You may also choose "Custom" if you have created your own material type.  When "Custom" is selected,
 a field named "Custom Name" will appear.  Use this field to enter your custom material name.
 
-**Lighting** - Whether or not this material will be lit.
+**Lighting** - Enable lighting.
 
-**Backface Culling** -  Whether or not backface culling is enabled. If enabled, backfaces won't 
+**Backface Culling** -  Enable backface culling. If enabled, backfaces won't 
 be visible.  If disabled, backfaces will be visible (double-sided).  
 
-**ZWriteEnable** - Whether or not the zbuffer is writable.  
+**ZWriteEnable** - Enable zbuffer writing.  
 
-**Normalize Normals** -  Whether or not the normals should be normalized.  Use this
-if the mesh is lit and scaled.
+**Normalize Normals** -  Normalize normals after loading. Use this if the mesh is 
+lit and scaled.
 
-**Link Diffuse** - Whether or not to link the diffuse color to Blender's material diffuse
-property. 
+**Link Diffuse** - Link the diffuse color to Blender's material diffuse property. 
 
-**Gouraud** - Whether or not to use Gouraud or flat shading.
+**Gouraud** - Use Gouraud or flat shading.
 
-**Frontface Culling** - Whether or not frontface culling is enabled.  If enabled, frontfaces won't
+**Frontface Culling** - Enable frontface culling.  If enabled, frontfaces won't
 be visible.  If disabled, frontfaces will be visible. 
 
-**Fog** - Whether or not fog is enabled for this material.
+**Fog** - Enable fog.
 
-**Use MipMaps** - Whether or not mipmaps are enabled.
+**Use MipMaps** - Enable using mipmaps.
 
-**Use Blender Textures** - Whether or not to use textures/images from Blender's texture slots.
+**Use Blender Textures** - Use textures/images from Blender's texture slots. If a 
+UV layer has an image assigned to it and also has images in the texture slots, the
+images in the texture slots are used if the options is enabled.
 
 **ZBuffer** - ZBuffer comparison method for depth buffer test. "Never" (disabled), "Less or Equal",
 "Equal", "Less", "Not Equal" "Greator or Equal", "Greator", "Always".  
 	
-**Antialiasing** - Whether or not anti-aliasing is enabled (EAAM_LINE_SMOOTH).
+**Antialiasing** - Enable anti-aliasing (EAAM_LINE_SMOOTH).
 
 **Color Material** - Defines the interpretation of vertex color in the lighting equation.
 Values should be chosen from E_COLOR_MATERIAL. When lighting is enabled, vertex color can 
