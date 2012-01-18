@@ -540,12 +540,14 @@ characterJumpSpeed = {ofCharJumpSpeed}\n\
 #                        g e t G U I I n t e r f a c e
 #=============================================================================
 def getGUIInterface(itype):
-    if type == 'debug':
+    if itype == 'debug':
         return IGUIDebug()
-    elif type == 'panel':
+    elif itype == 'panel':
         return IGUIPanel()
-    elif type == 'filepanel':
+    elif itype == 'filepanel':
         return IGUIFilePanel()
+    elif itype == 'null':
+        return IGUINull()
     else:
         return IGUIDebug()
 
@@ -1343,7 +1345,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
     if gWalkTestPath64 and (context.scene.irrb_wt_bits == "BITS_64"):
         WalkTestPath = gWalkTestPath64
 
-    exporter = iExporter(context, operator, getGUIInterface('filepanel'),
+    exporter = iExporter(context, operator, getGUIInterface('null'),
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportAnimationTails, 
@@ -2138,6 +2140,17 @@ class IGUIDebug:
     def isExportCanceled(self):
         #print('GUI.isExportCanceled()')
         return self.canceled
+
+#=============================================================================
+#                            I G U I N u l l    
+#=============================================================================
+class IGUINull(IGUIDebug):
+    
+    def setStatus(self, status):
+        pass
+
+    def updateStatus(self, status):
+        pass
 
 #=============================================================================
 #                            I G U I P a n e l    
@@ -3392,9 +3405,11 @@ class iMesh:
         self.bKeyBlocks = None
         self.armatures = []
         self.shapes = []
+        self.uvImageCount = 0
 
         # get 'Mesh' 
         self.bMesh = bObject.data
+        self._setUVImageCount()
 
         # get mesh shape keys
         self.bKey = self.bMesh.shape_keys
@@ -3571,6 +3586,16 @@ class iMesh:
         if names == '':
             names = 'none:'
         return names
+    
+    def _setUVImageCount(self):
+        # count images assigned to uv layers
+        self.uvImageCount = 0
+        for layerNumber in range(len(self.bMesh.uv_textures)):
+            for fidx in range(len(self.bMesh.uv_textures[layerNumber].data)):                
+                uvFaceData = \
+                    self.bMesh.uv_textures[layerNumber].data[fidx]
+                if uvFaceData.image != None:
+                    self.uvImageCount += 1
 
     #=========================================================================
     #                    _ g e t M a t e r i a l I n f o
@@ -3584,17 +3609,8 @@ class iMesh:
             if bMaterial:
                 matName = bMaterial.name
                 
-        # count images assigned to uv layers
-        uvImageCount = 0
-        for layerNumber in range(len(self.bMesh.uv_textures)):
-            for fidx in range(len(self.bMesh.uv_textures[layerNumber].data)):                
-                uvFaceData = \
-                    self.bMesh.uv_textures[layerNumber].data[fidx]
-                if uvFaceData.image != None:
-                    uvImageCount += 1
-
         # uv images take precedence over Blender material texture slots
-        if (uvImageCount > 0) or (bMaterial == None):
+        if (self.uvImageCount > 0) or (bMaterial == None):
             for layerNumber in range(len(self.bMesh.uv_textures)):
                 uvFaceData = \
                     self.bMesh.uv_textures[layerNumber].data[face.index]

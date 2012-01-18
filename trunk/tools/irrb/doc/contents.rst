@@ -26,7 +26,6 @@ irrB Documentation Contents
    fog
    physics
    utilities
-   notes
    samples
    tutorials
    faq
