@@ -165,6 +165,9 @@ namespace irr
             u8      mAntiAliasing;
             u8      mColorMask;
             u8      mColorMaterial;
+		    u8      mBlendOperation;
+		    u8      mPolygonOffsetFactor;
+    		u8      mPolygonOffsetDirection;
             u8      mLayerCount;
             bool    mWireframe:1;
             bool    mPointCloud:1;
