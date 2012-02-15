@@ -485,13 +485,9 @@ namespace irr
             layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
             layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
             layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;
-#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
-            layer.mTextureWrapU = material.TextureLayer[layerNumber].TextureWrap;
-            layer.mTextureWrapV = layer.mTextureWrapU;
-#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
             layer.mTextureWrapU = material.TextureLayer[layerNumber].TextureWrapU;
             layer.mTextureWrapV = material.TextureLayer[layerNumber].TextureWrapV;
-#endif
+            layer.mLODBias = material.TextureLayer[layerNumber].LODBias;
             memcpy(&layer.mMatrix,material.TextureLayer[layerNumber].getTextureMatrix().pointer(),sizeof(f32)*16);
         }
 
@@ -511,7 +507,11 @@ namespace irr
             mat.mThickness = material.Thickness;
             mat.mZBuffer = material.ZBuffer;
             mat.mAntiAliasing = material.AntiAliasing;
-            mat.mColorMask = material.ColorMask;           
+            mat.mColorMask = material.ColorMask;  
+            mat.mColorMaterial = material.ColorMaterial;
+            mat.mBlendOperation = material.BlendOperation;
+            mat.mPolygonOffsetFactor = material.PolygonOffsetFactor;
+            mat.mPolygonOffsetDirection = material.PolygonOffsetDirection;
 
             mat.mWireframe = material.Wireframe;
             mat.mPointCloud = material.PointCloud;
@@ -522,6 +522,7 @@ namespace irr
             mat.mFrontfaceCulling = material.FrontfaceCulling;
             mat.mFogEnable = material.FogEnable;
             mat.mNormalizeNormals = material.NormalizeNormals;
+            mat.mUseMipMaps = material.UseMipMaps;
         }
     } // end namespace
 } // end namespace

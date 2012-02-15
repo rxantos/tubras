@@ -266,17 +266,13 @@ void CIrrBMeshFileLoader::setMaterialLayer(video::SMaterial& material, u8 layerN
         material.TextureLayer[layerNumber].BilinearFilter = layer.mBilinearFilter;
         material.TextureLayer[layerNumber].TrilinearFilter = layer.mTrilinearFilter;
         material.TextureLayer[layerNumber].AnisotropicFilter = layer.mAnisotropicFilter;
-#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
-        material.TextureLayer[layerNumber].TextureWrap = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrapU;
-#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
+        material.TextureLayer[layerNumber].LODBias = layer.mLODBias;
         material.TextureLayer[layerNumber].TextureWrapU = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrapU;
         material.TextureLayer[layerNumber].TextureWrapV = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrapV;
-#endif
         irr::core::matrix4 mat4;
         memcpy(mat4.pointer(),&layer.mMatrix,sizeof(u16)*16);
         material.TextureLayer[layerNumber].setTextureMatrix(mat4);
     }
-
 }
 
 void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMaterial& mat)
@@ -301,6 +297,9 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
     material.ColorMask = mat.mColorMask;
     material.ColorMaterial = mat.mColorMaterial;
     material.UseMipMaps = mat.mUseMipMaps;
+    material.PolygonOffsetDirection = (irr::video::E_POLYGON_OFFSET)mat.mPolygonOffsetDirection;
+    material.PolygonOffsetFactor = mat.mPolygonOffsetFactor;
+    material.BlendOperation = (irr::video::E_BLEND_OPERATION)mat.mBlendOperation;
 }
 
 
