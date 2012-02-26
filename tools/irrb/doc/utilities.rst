@@ -59,7 +59,7 @@ following environment variables:
 **Linux** - if installed to "/home/jethro/irrbutils", then you would set the following 
 environment variables:
 
-	| ``IWALKTEST=/home/jethro/iwalktest -i "$1" -a "$2"``
+	| ``IWALKTEST=/home/jethro/iwalktest -i \$1 -a \$2``
 	| ``IMESHCVT=/home/jethro/imeshcvt``
 
 The "$1" and "$2" substitution variables inform **irrB** where to insert the 
