@@ -99,11 +99,9 @@ static void _init()
 {
 
     //
-    // set up the default font
+    // override default font
     //        
-
-
-    stringc fontFolder = "../data/fnt/";
+    stringc fontFolder = "../../data/fnt/";
     stringc defFonts = fontFolder + "defaults.zip";
     if(m_fileSystem->existFile(defFonts.c_str()))
     {
@@ -122,22 +120,15 @@ static void _init()
         }
     }
 
-
-
-
     //
     // setup debug overlay
     //
-
-
     m_debugOverlay = new CTextOverlay("DebugInfo",rectf(0.25f,0.005f,0.75f,0.05f));
     m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", EGUIA_CENTER);
     m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", EGUIA_CENTER);
     m_debugOverlay->addItem("Visible Debug Data:", EGUIA_CENTER);
 
     m_debugOverlay->setVisible(true);
-
-
 }
 
 //-----------------------------------------------------------------------------
@@ -740,7 +731,7 @@ void test10()
 int main(int argc, char* argv[])
 {
 
-    // test1();
+    test1();
 
     /*
     core::vector3df Scale(10.f, 10.f, 10.f);
@@ -763,7 +754,7 @@ int main(int argc, char* argv[])
 
     // test8();
 
-     test9();
+    // test9();
 
     // test10();
 
