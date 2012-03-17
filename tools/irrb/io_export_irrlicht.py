@@ -11,8 +11,7 @@ bl_info = {
     'description': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
-    'blender': (2, 6, 1),
-    'api': 39685,
+    'blender': (2, 6, 2),
     'location': 'File > Import-Export',
     'warning': '',
     'wiki_url': 'http://code.google.com/p/tubras/wiki/irrb',
@@ -2233,9 +2232,9 @@ class iMaterial:
     #=========================================================================
     #                               _ i n i t _
     #=========================================================================
-    def __init__(self, bobject, name, exporter, bmaterial, face=None):
+    def __init__(self, bobject, bmesh, name, exporter, bmaterial, face=None):
         self.bobject = bobject
-        self.bmesh = bobject.data
+        self.bmesh = bmesh
         self.bmaterial = bmaterial
         self.bimages = []
         self.name = name
@@ -3190,7 +3189,7 @@ class iScene:
         if len(bObject.material_slots) > 0:
             bMaterial = bObject.material_slots[0].material
             
-        material = iMaterial(bObject, 'skydome', self.exporter, bMaterial)
+        material = iMaterial(bObject, bObject.data, 'skydome', self.exporter, bMaterial)
 
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
@@ -3409,6 +3408,9 @@ class iMesh:
 
         # get 'Mesh' 
         self.bMesh = bObject.data
+        if  not len(self.bMesh.faces):
+            self.bMesh.update(calc_tessface=True)                
+        
         self._setUVImageCount()
 
         # get mesh shape keys
@@ -3521,6 +3523,7 @@ class iMesh:
 
         self.meshBuffers[:] = []
         self.materials.clear()
+        # todo remove comment bpy.data.meshes.remove(self.bMesh)
 
     #=========================================================================
     #                        f i n d M a t N a m e
@@ -3674,13 +3677,13 @@ class iMesh:
             if matName in self.materials:
                 meshBuffer = self.materials[matName]
             else:
-                material = iMaterial(self.bObject, matName, self.exporter,
+                material = iMaterial(self.bObject, self.bMesh, matName, self.exporter,
                     bMaterial, face)
 
                 # create the meshbuffer and update the material dict & mesh
                 # buffer list
-                meshBuffer = iMeshBuffer(self.exporter, self.bObject, material,
-                        matName, len(self.meshBuffers), self.armatures)
+                meshBuffer = iMeshBuffer(self.exporter, self.bObject, self.bMesh, 
+                        material, matName, len(self.meshBuffers), self.armatures)
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
@@ -3758,23 +3761,22 @@ class iMeshBuffer:
     #=========================================================================
     #                               _ i n i t _
     #=========================================================================
-    def __init__(self, exporter, bObject, material, uvMatName, bufNumber,
+    def __init__(self, exporter, bObject, bMesh, material, uvMatName, bufNumber,
         armatures):
         self.bObject = bObject
-        self.bMesh = bObject.data
+        self.bMesh = bMesh
 
         #self.bKey = self.bMesh.key
         #self.bKeyBlocks = None
         #if self.bKey:
         #    self.bKeyBlocks = self.bKey.blocks
-
         self.vertexColorData = None
-        if self.bMesh.vertex_colors.active:
-            self.vertexColorData = self.bMesh.vertex_colors.active.data
+        if self.bMesh.tessface_vertex_colors.active:
+            self.vertexColorData = self.bMesh.tessface_vertex_colors.active.data
 
         self.vertexColorAlpha = None
-        if 'alpha' in self.bMesh.vertex_colors:
-            self.vertexColorAlpha = self.bMesh.vertex_colors['alpha'].data
+        if 'alpha' in self.bMesh.tessface_vertex_colors:
+            self.vertexColorAlpha = self.bMesh.tessface_vertex_colors['alpha'].data
 
         self.bufNumber = bufNumber
         self.exporter = exporter
@@ -4278,6 +4280,7 @@ class iMeshBuffer:
         bVertex = self.bMesh.vertices[bFace.vertices[idx]]
         vColor = None
         vAlpha = 1.0
+        
         if self.vertexColorData:
             vColor = getattr(self.vertexColorData[bFace.index],
                 'color{}'.format(idx + 1))
@@ -4291,13 +4294,13 @@ class iMeshBuffer:
         UV2 = None
         suv1 = ''
         suv2 = ''
-        uvLayerCount = len(self.bMesh.uv_textures)
+        uvLayerCount = len(self.bMesh.tessface_uv_textures)
         if uvLayerCount > 0:
-            uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
+            uvFaceData = self.bMesh.tessface_uv_textures[0].data[bFace.index]
             UV1 = tuple(uvFaceData.uv[idx])
             suv1 = '{:.6f}{:.6f}'.format(UV1[0], UV1[1])
         if uvLayerCount > 1:
-            uvFaceData = self.bMesh.uv_textures[1].data[bFace.index]
+            uvFaceData = self.bMesh.tessface_uv_textures[1].data[bFace.index]
             UV2 = tuple(uvFaceData.uv[idx])
             suv2 = '{:.6f}{:.6f}'.format(UV2[0], UV2[1])
 
