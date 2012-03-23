@@ -3287,7 +3287,7 @@ class iScene:
 
         bImage = None
         if len(bMesh.uv_textures):
-            bImage = bMesh.uv_textures[0].data[bMesh.faces[0].index].image
+            bImage = bMesh.uv_textures[0].data[bMesh.tessfaces[0].index].image
 
         self._writeSBImageAttributes(file, i2, material, bImage)
 
@@ -3408,7 +3408,7 @@ class iMesh:
 
         # get 'Mesh' 
         self.bMesh = bObject.data
-        if  not len(self.bMesh.faces):
+        if  not len(self.bMesh.tessfaces):
             self.bMesh.update(calc_tessface=True)                
         
         self._setUVImageCount()
@@ -3648,7 +3648,7 @@ class iMesh:
         # face/vertex info into the MeshBuffer.
         #
         result = True
-        faces = self.bMesh.faces
+        faces = self.bMesh.tessfaces
 
         fcount = 0
         tfaces = len(faces)
@@ -4825,7 +4825,7 @@ class iExporter:
             addWarning(msg)
             return None
 
-        faces = mesh.faces
+        faces = mesh.tessfaces
         if len(faces) != 1:
             msg = 'Ignoring billboard: {}, ' \
                 'invalid face count: {}'.format(mesh.name, len(faces))
@@ -4942,7 +4942,7 @@ class iExporter:
             addWarning(msg)
             return None
 
-        faces = mesh.faces
+        faces = mesh.tessfaces
         if len(faces) < 1:
             msg = 'Ignoring volume light: {}, ' \
                 'invalid face count: {}'.format(mesh.name, len(faces))
