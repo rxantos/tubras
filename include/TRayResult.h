@@ -17,7 +17,7 @@ namespace Tubras
     protected:
         bool                m_hasHit;
         TReal               m_closestHitFraction;
-        btCollisionObject*  m_bulletCollisionObject;
+        const btCollisionObject*  m_bulletCollisionObject;
         TPhysicsObject*     m_collisionObject;
         TVector3            m_hitNormalWorld;
         TVector3            m_hitPointWorld;
@@ -30,7 +30,7 @@ namespace Tubras
 
         bool hasHit() {return m_hasHit;}
         TPhysicsObject*     getCollisionObject() {return m_collisionObject;}
-        btCollisionObject*  getBulletCollisionObject() {return m_bulletCollisionObject;}
+        const btCollisionObject*  getBulletCollisionObject() {return m_bulletCollisionObject;}
         TVector3 getHitNormalWorld() {return m_hitNormalWorld;}
         TVector3 getHitPointWorld() {return m_hitPointWorld;}
     };
