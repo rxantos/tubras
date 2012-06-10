@@ -2523,14 +2523,14 @@ class iMaterial:
             
         # count images assigned to uv layers
         uvImageCount = 0
-        for layerNumber in range(len(self.bmesh.uv_textures)):
-            for uvFaceData in self.bmesh.uv_textures[layerNumber].data:
+        for layerNumber in range(len(self.bmesh.tessface_uv_textures)):
+            for uvFaceData in self.bmesh.tessface_uv_textures[layerNumber].data:
                 if uvFaceData.image != None:
                     uvImageCount += 1
                     break
         
         if uvImageCount > 0:
-            for layerNumber in range(len(self.bmesh.uv_textures)):
+            for layerNumber in range(len(self.bmesh.tessface_uv_textures)):
                 uvFaceData =\
                     self.bmesh.uv_textures[layerNumber].data[face.index]
                 if uvFaceData.image != None:
@@ -3286,8 +3286,8 @@ class iScene:
         material.attributes['MaterialTypeParam'] = 1.194e-041
 
         bImage = None
-        if len(bMesh.uv_textures):
-            bImage = bMesh.uv_textures[0].data[bMesh.tessfaces[0].index].image
+        if len(bMesh.tessface_uv_textures):
+            bImage = bMesh.tessface_uv_textures[0].data[bMesh.tessfaces[0].index].image
 
         self._writeSBImageAttributes(file, i2, material, bImage)
 
@@ -3408,8 +3408,8 @@ class iMesh:
 
         # get 'Mesh' 
         self.bMesh = bObject.data
-        if  not len(self.bMesh.tessfaces):
-            self.bMesh.update(calc_tessface=True)                
+        if  not self.bMesh.tessfaces and self.bMesh.polygons:
+            self.bMesh.calc_tessface()                
         
         self._setUVImageCount()
 
@@ -3435,7 +3435,7 @@ class iMesh:
 
         # dict of {mangled material name, MeshBuffer()}
         self.materials = {}
-        self.hasFaceUV = len(self.bMesh.uv_textures) > 0
+        self.hasFaceUV = len(self.bMesh.tessface_uv_textures) > 0
         self.debug = debug
 
         self.uvMatName = None                # Irrlicht material name
@@ -3456,14 +3456,14 @@ class iMesh:
         debug('Hide Render: ' + str(self.bObject.hide_render))
 
         lnames = ''
-        for uv in self.bMesh.uv_textures:
+        for uv in self.bMesh.tessface_uv_textures:
             if len(uv.name):
                 lnames += ', '
             lnames += uv.name
-        debug('UV Layers ({}): {}'.format(len(self.bMesh.uv_textures),
+        debug('UV Layers ({}): {}'.format(len(self.bMesh.tessface_uv_textures),
                 lnames))
         
-        for uvtex in self.bMesh.uv_textures:            
+        for uvtex in self.bMesh.tessface_uv_textures:            
             debug('UV Layer: {}'.format(uvtex.name))
             inames = []
             for fidx in range(len(uvtex.data)):
@@ -3529,13 +3529,13 @@ class iMesh:
     #                        f i n d M a t N a m e
     #=========================================================================
     def findMatName(self):
-        if len(self.bMesh.uv_textures) == 0:
+        if len(self.bMesh.tessface_uv_textures) == 0:
             return
 
         #
         # search for matching Irrlicht material name
         #
-        for uv in self.bMesh.uv_textures:
+        for uv in self.bMesh.tessface_uv_textures:
             if getIrrMaterial(uv.name) != None:
                 self.uvMatName = uv.name
                 return
@@ -3543,7 +3543,7 @@ class iMesh:
         #
         # if not found look for custom name: '$' prefix
         #
-        for uv in self.bMesh.uv_textures:
+        for uv in self.bMesh.tessface_uv_textures:
             if uv.name[0] == '$':
                 self.uvMatName = uv.name
                 return
@@ -3580,7 +3580,7 @@ class iMesh:
     #=========================================================================
     def _getFaceImageNames(self, face):
         names = ''
-        for uvlayer in self.bMesh.uv_textures:
+        for uvlayer in self.bMesh.tessface_uv_textures:
 
             if uvlayer.data[face.index].image == None:
                 names += 'none:'
@@ -3593,10 +3593,10 @@ class iMesh:
     def _setUVImageCount(self):
         # count images assigned to uv layers
         self.uvImageCount = 0
-        for layerNumber in range(len(self.bMesh.uv_textures)):
-            for fidx in range(len(self.bMesh.uv_textures[layerNumber].data)):                
+        for layerNumber in range(len(self.bMesh.tessface_uv_textures)):
+            for fidx in range(len(self.bMesh.tessface_uv_textures[layerNumber].data)):                
                 uvFaceData = \
-                    self.bMesh.uv_textures[layerNumber].data[fidx]
+                    self.bMesh.tessface_uv_textures[layerNumber].data[fidx]
                 if uvFaceData.image != None:
                     self.uvImageCount += 1
 
@@ -3614,9 +3614,9 @@ class iMesh:
                 
         # uv images take precedence over Blender material texture slots
         if (self.uvImageCount > 0) or (bMaterial == None):
-            for layerNumber in range(len(self.bMesh.uv_textures)):
+            for layerNumber in range(len(self.bMesh.tessface_uv_textures)):
                 uvFaceData = \
-                    self.bMesh.uv_textures[layerNumber].data[face.index]
+                    self.bMesh.tessface_uv_textures[layerNumber].data[face.index]
                 if uvFaceData.image == None:
                     matName += ':0'
                 else:
