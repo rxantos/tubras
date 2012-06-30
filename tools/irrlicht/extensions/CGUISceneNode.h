@@ -501,9 +501,12 @@ namespace irr
             occured. This pointer should not be dropped. See
             IReferenceCounted::drop() for more information. */
             virtual gui::IGUIImage* addImage(const core::rect<s32>& rectangle,
-                gui::IGUIElement* parent=0, s32 id=-1, const wchar_t* text=0) {
+                gui::IGUIElement* parent=0, s32 id=-1, const wchar_t* text=0, bool useAlphaChannel=true) {
                     gui::IGUIImage* img = new gui::CGUIImage(this, parent ? parent : this,
                         id, rectangle);
+
+                    if (useAlphaChannel)
+                        img->setUseAlphaChannel(true);
 
                     if (text)
                         img->setText(text);
