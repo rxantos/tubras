@@ -185,10 +185,24 @@ namespace irr
             //! Returns whether the element has focus
             /** \param element Pointer to the element which is tested.
             \return True if the element has focus, else false. */
-            virtual bool hasFocus(IGUIElement* element) const {
-                _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
-                return (element == Focus);
-            }
+			virtual bool hasFocus(IGUIElement* element, bool checkSubElements) const
+			{
+				_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+				if (element == Focus)
+					return true;
+
+				if ( !checkSubElements || !element )
+					return false;
+
+				IGUIElement* f = Focus;
+				while ( f && f->isSubElement() )
+				{
+					f = f->getParent();
+					if ( f == element )
+						return true;
+				}
+				return false;
+			}
 
             //! Returns the current video driver.
             /** \return Pointer to the video driver. */
