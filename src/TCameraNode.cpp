@@ -235,6 +235,33 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
+    //                     u p d a t e M a t r i c e s
+    //-----------------------------------------------------------------------
+	void TCameraNode::updateMatrices()
+	{
+		core::vector3df pos = getAbsolutePosition();
+		core::vector3df tgtv = m_target - pos;
+		tgtv.normalize();
+
+		// if upvector and vector to the target are the same, we have a
+		// problem. so solve this problem:
+		core::vector3df up = m_upVector;
+		up.normalize();
+
+		f32 dp = tgtv.dotProduct(up);
+
+		if ( core::equals(core::abs_<f32>(dp), 1.f) )
+		{
+			up.X += 0.5f;
+		}
+
+		m_viewArea.getTransform(video::ETS_VIEW).buildCameraLookAtMatrixLH(pos, m_target, up);
+		m_viewArea.getTransform(video::ETS_VIEW) *= m_affector;
+		recalculateViewArea();
+	}
+
+
+    //-----------------------------------------------------------------------
     //          g e t T a r g e t A n d R o t a t i o n B i n d i n g
     //-----------------------------------------------------------------------
     bool TCameraNode::getTargetAndRotationBinding(void) const

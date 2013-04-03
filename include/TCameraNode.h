@@ -79,6 +79,9 @@ namespace Tubras
 		//! Binds the camera scene node's rotation to its target position and vice vera, or unbinds them.
 		virtual void bindTargetAndRotation(bool bound);
 
+		//! Updates the matrices without uploading them to the driver
+		virtual void updateMatrices();
+
 		//! Queries if the camera scene node's rotation and its target position are bound together.
 		virtual bool getTargetAndRotationBinding(void) const;
 
